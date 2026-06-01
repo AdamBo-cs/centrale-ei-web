@@ -1,0 +1,26 @@
+.movie-card {
+  display: inline-flex; 
+  flex-direction: column;
+
+  width: calc(20% - 16px);
+  margin: 8px;
+  box-sizing: border-box;
+  vertical-align: top; 
+
+  border: 1px solid #282c34;
+  border-radius: 8px;
+  background-color:#282c34;
+  overflow: hidden;
+}
+
+.movie-title {
+  color: white; 
+  margin: 0 0 4px 0;
+  font-size: 1.1rem;
+}
+
+.movie-date {
+  color: white; 
+  margin: 0;
+  font-size: 0.9rem;
+}
