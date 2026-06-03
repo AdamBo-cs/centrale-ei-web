@@ -12,8 +12,16 @@ const User = new typeorm.EntitySchema({
       type: String,
       unique: true,
     },
+    password: { 
+      type: String, 
+      nullable: true
+    },
     firstname: { type: String },
     lastname: { type: String },
+    theme: { 
+      type: String, 
+      default: 'light' // Préférence visuelle par défaut
+    },
   },
 });
 
