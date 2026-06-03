@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './Home.css';
+import { Link } from 'react-router-dom';
 import { UseFetchMovies } from './UseFetchMovies';
 import Movie from '../../components/Movie/Movie'; // Ajuste le chemin si nécessaire
 
@@ -30,7 +31,13 @@ function Home() {
       <h2>Films </h2>
       <div className="movies-grid">
         {filtered_movies.map((singleMovie) => (
-          <Movie key={singleMovie.id} movie={singleMovie} />
+          <Link
+            to={`/movies/${singleMovie.id}`}
+            key={singleMovie.id}
+            style={{ textDecoration: 'none', color: 'inherit' }}
+          >
+            <Movie movie={singleMovie} />
+          </Link>
         ))}
       </div>
     </div>
