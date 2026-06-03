@@ -19,7 +19,7 @@ function Movie({ movie }) {
       <div className="movie-infos">
         <h3 className="movie-title">{movie.name}</h3>
         <p className="movie-date">
-          Sortie : {movie.release_date ? movie.release_date : 'Inconnue'}
+          Sortie : {movie.date}
         </p>
       </div>
     </div>
