@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@smastrom/react-rating": "^1.5.0"
+  }
+}
