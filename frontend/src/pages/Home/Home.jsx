@@ -7,7 +7,9 @@ function Home() {
   const [movieName, setMovieName] = useState('');
   const movies = UseFetchMovies();
   const filtered_movies = movies.filter((movie) => {
-    return movie.title.toLowerCase().includes(movieName.toLowerCase());
+    return (movie.name || '')
+      .toLowerCase()
+      .includes(movieName.toLowerCase());
   });
 
   return (

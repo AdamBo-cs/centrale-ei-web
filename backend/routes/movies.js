@@ -5,9 +5,18 @@ import { appDataSource } from '../datasource.js';
 const router = express.Router();
 
 router.get('/', function (req, res) {
-  console.log('test du GET /movies');
-  res.send('test');
-  //   res.json([]);
+  appDataSource
+    .getRepository(Movie)
+    .find({})
+    .then(function (movies) {
+      res.json(movies);
+    })
+    .catch(function (error) {
+      console.error(error);
+      res.status(500).json({
+        message: 'Error while fetching movies',
+      });
+    });
 });
 
 router.post('/new', function (req, res) {

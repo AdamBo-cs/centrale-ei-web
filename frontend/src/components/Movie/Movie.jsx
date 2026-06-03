@@ -6,10 +6,10 @@ function Movie({ movie }) {
 
   return (
     <div className="movie-card">
-      {movie.poster_path ? (
+      {movie.image ? (
         <img
-          src={`${baseImageUrl}${movie.poster_path}`}
-          alt={`Affiche du film ${movie.title}`}
+          src={`${baseImageUrl}${movie.image}`}
+          alt={`Affiche du film ${movie.name}`}
           className="movie-poster"
         />
       ) : (
@@ -17,7 +17,7 @@ function Movie({ movie }) {
       )}
 
       <div className="movie-infos">
-        <h3 className="movie-title">{movie.title}</h3>
+        <h3 className="movie-title">{movie.name}</h3>
         <p className="movie-date">
           Sortie : {movie.release_date ? movie.release_date : 'Inconnue'}
         </p>
