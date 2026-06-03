@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import './Home.css';
 import { UseFetchMovies } from './UseFetchMovies';
-import Movie from '../../components/Movie/Movie'; // Ajuste le chemin si nécessaire
+import Movie from '../../components/Movie/Movie';
 
 function Home() {
   const [movieName, setMovieName] = useState('');
+  const [visibleMovies, setVisibleMovies] = useState(100);
   const movies = UseFetchMovies();
   const filtered_movies = movies.filter((movie) => {
     return (movie.name || '')
@@ -29,10 +30,24 @@ function Home() {
       <p>{movieName}</p>
       <h2>Films </h2>
       <div className="movies-grid">
-        {filtered_movies.map((singleMovie) => (
-          <Movie key={singleMovie.id} movie={singleMovie} />
+        {filtered_movies
+          .slice(0, visibleMovies)
+          .map((singleMovie, index) => (
+            <Movie
+              key={singleMovie.id}
+              movie={singleMovie}
+              rank={index + 1}
+            />
         ))}
       </div>
+
+      {visibleMovies < filtered_movies.length && (
+        <button
+          onClick={() => setVisibleMovies(visibleMovies + 20)}
+        >
+          Charger plus
+        </button>
+      )}
     </div>
   );
 }
