@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import './Home.css';
+import { Link } from 'react-router-dom';
 import { UseFetchMovies } from './UseFetchMovies';
+import Movie from '../../components/Movie/Movie';
 import Movie from '../../components/Movie/Movie';
 
 function Home() {
@@ -8,6 +10,7 @@ function Home() {
   const [movieName, setMovieName] = useState('');
   const [visibleMovies, setVisibleMovies] = useState(100);
   const movies = UseFetchMovies();
+
   const filtered_movies = movies.filter((movie) => {
     return (movie.name || '')
       .toLowerCase()
@@ -97,14 +100,14 @@ function Home() {
       <p>{movieName}</p>
       <h2>Films </h2>
       <div className="movies-grid">
-        {sortedMovies
-          .slice(0, visibleMovies)
-          .map((singleMovie, index) => (
-            <Movie
-              key={singleMovie.id}
-              movie={singleMovie}
-              rank={index + 1}
-            />
+        {filtered_movies.map((singleMovie) => (
+          <Link
+            to={`/movies/${singleMovie.id}`}
+            key={singleMovie.id}
+            style={{ textDecoration: 'none', color: 'inherit' }}
+          >
+            <Movie movie={singleMovie} />
+          </Link>
         ))}
       </div>
 
