@@ -2,10 +2,8 @@ import fetch from 'node-fetch';
 import { appDataSource } from './datasource.js';
 import { Movie } from './entities/movie.js';
 
-// Token TMDb
 const TMDB_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxZjlmNjAwMzY4MzMzODNkNGIwYjNhNzJiODA3MzdjNCIsInN1YiI6IjY0NzA5YmE4YzVhZGE1MDBkZWU2ZTMxMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.Em7Y9fSW94J91rbuKFjDWxmpWaQzTitxRKNdQ5Lh2Eo';
 
-// Configuration des requêtes API
 const requestOptions = {
   method: 'GET',
   headers: {
@@ -14,13 +12,12 @@ const requestOptions = {
   }
 };
 
-console.log("Connexion à la base de données...");
+console.log("Connexion à la base de données");
 
 appDataSource.initialize()
   .then(function () {
 
-    console.log("Connexion réussie !");
-    console.log("Récupération des films depuis TMDb...");
+    console.log("Récupération des films");
 
     // Récupération des 10 premières pages des films les mieux notés
     const pageRequests = [];
@@ -55,7 +52,7 @@ appDataSource.initialize()
     });
 
     console.log(`${movies.length} films trouvés.`);
-    console.log("Récupération des informations détaillées...");
+    console.log("Récupération des informations des films");
 
     // Requête détaillée pour chaque film
     const detailRequests = movies.map(movie => {
@@ -71,9 +68,7 @@ appDataSource.initialize()
   })
 
   .then(function (movieDetails) {
-
-    console.log("Informations récupérées.");
-    console.log("Insertion dans la base de données...");
+    console.log("Insertion dans la base de données");
 
     const movieRepository = appDataSource.getRepository(Movie);
 
@@ -105,14 +100,14 @@ appDataSource.initialize()
 
   .then(function () {
 
-    console.log("Base de données remplie avec succès.");
+    console.log("Base de données remplie");
 
     return appDataSource.destroy();
   })
 
   .then(function () {
 
-    console.log("Connexion fermée.");
+    console.log("Connexion fermée");
   })
 
   .catch(function (error) {
