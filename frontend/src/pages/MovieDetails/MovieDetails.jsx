@@ -1,47 +1,41 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import './moviedetails.css'; // <-- Importation de votre nouvelle feuille de style
 
 const MovieDetails = () => {
-  // 1. Extraction du paramètre dynamique de l'URI
   const { id } = useParams();
-
-  // 2. Définition des états locaux gérant le cycle de vie réseau
   const [movieDetails, setMovieDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Instanciation de l'AbortController pour la prévention des fuites de mémoire (Memory Leaks)
     const abortController = new AbortController();
 
-    const fetchMovieData = async () => {
+    const fetchMovieFromLocalAPI = async () => {
       try {
         setIsLoading(true);
         setError(null);
 
-        // ATTENTION : Si singleMovie.id dans Home.jsx correspond à l'ID de l'API IMDB (ex: tt0111161),
-        // utilisez l'API OMDB. Si c'est l'ID de votre base SQLite (ex: 1, 2), 
-        // vous devrez pointer vers votre propre backend (ex: http://localhost:8000/movies/${id}).
-        
-        // Exemple d'implémentation pointant vers l'interface publique d'IMDB (OMDB) :
-        const response = await fetch(`https://www.omdbapi.com/?i=${id}&apikey=VOTRE_CLE_API_ICI`, {
-          signal: abortController.signal
+        const urlBackEnd = `http://localhost:8000/movies/${id}`;
+        console.log("📡 Envoi de la requête vers :", urlBackEnd);
+
+        const response = await fetch(urlBackEnd, {
+          signal: abortController.signal,
+          headers: {
+            'Accept': 'application/json'
+          }
         });
 
         if (!response.ok) {
-          throw new Error(`Erreur HTTP lors de la requête : ${response.status}`);
+           throw new Error(`Erreur HTTP : ${response.status}`);
         }
 
         const data = await response.json();
-
-        // Validation du payload de retour selon les spécifications de l'API cible
-        if (data.Response === "False") {
-          throw new Error(data.Error || "Ressource introuvable.");
-        }
-
         setMovieDetails(data);
+        
       } catch (err) {
         if (err.name !== 'AbortError') {
+          console.error("❌ Une erreur est survenue :", err.message);
           setError(err.message);
         }
       } finally {
@@ -49,41 +43,85 @@ const MovieDetails = () => {
       }
     };
 
-    fetchMovieData();
+    fetchMovieFromLocalAPI();
 
-    // Fonction de nettoyage (Cleanup function)
     return () => abortController.abort();
-    
-  }, [id]); // La dépendance à 'id' garantit le rechargement si l'URL est modifiée.
+  }, [id]);
 
-  // 3. Arbre de décision de rendu (Rendu conditionnel)
-  if (isLoading) return <div>Initialisation de la requête réseau...</div>;
-  if (error) return <div style={{ color: 'red' }}>Exception critique : {error}</div>;
+  if (isLoading) return <div className="movie-details-loading">Interrogation de la base de données...</div>;
+  if (error) return <div className="movie-details-error">Erreur : {error}</div>;
   if (!movieDetails) return null;
 
-  // 4. Rendu de la ressource (à adapter selon les clés exactes du JSON renvoyé par votre API)
+  const getPosterUrl = (path) => {
+    if (!path) return null;
+    return path.startsWith('/') ? `https://image.tmdb.org/t/p/w500${path}` : path;
+  };
+
+  const getBannerUrl = (path) => {
+    if (!path) return null;
+    return path.startsWith('/') ? `https://image.tmdb.org/t/p/original${path}` : path;
+  };
+
   return (
-    <main style={{ padding: '2rem' }}>
-      <h1>{movieDetails.Title} ({movieDetails.Year})</h1>
-      <div style={{ display: 'flex', gap: '2rem', marginTop: '2rem' }}>
-        <img 
-          src={movieDetails.Poster} 
-          alt={`Affiche du film ${movieDetails.Title}`} 
-          style={{ maxWidth: '300px', borderRadius: '8px' }}
-        />
-        <article>
+    <main className="movie-details-main">
+      
+      {movieDetails.banner && (
+        <div className="movie-details-banner">
+          <img 
+            src={getBannerUrl(movieDetails.banner)} 
+            alt="Bannière du film" 
+          />
+        </div>
+      )}
+
+      <header className="movie-details-header">
+        <h1 className="movie-details-title">
+          {movieDetails.name} <span className="movie-details-date">({movieDetails.date})</span>
+        </h1>
+        {movieDetails.tagline && (
+          <h2 className="movie-details-tagline">
+            "{movieDetails.tagline}"
+          </h2>
+        )}
+      </header>
+      
+      <section className="movie-details-content">
+        <aside className="movie-details-aside">
+          {movieDetails.image ? (
+            <img 
+              src={getPosterUrl(movieDetails.image)} 
+              alt={`Affiche de ${movieDetails.name}`} 
+              className="movie-details-poster"
+            />
+          ) : (
+            <div className="movie-details-poster-placeholder">
+              Aucune affiche disponible
+            </div>
+          )}
+        </aside>
+        
+        <article className="movie-details-article">
+          <div className="movie-details-stats-grid">
+            <div>
+              <strong>Note :</strong> {movieDetails.rating ? `${movieDetails.rating}/10` : 'N/A'}
+            </div>
+            <div>
+              <strong>Durée :</strong> {movieDetails.duration ? `${movieDetails.duration} min` : 'N/A'}
+            </div>
+            <div>
+              <strong>Langue originale :</strong> {movieDetails.original_language ? movieDetails.original_language.toUpperCase() : 'N/A'}
+            </div>
+            <div>
+              <strong>Budget :</strong> {movieDetails.budget ? `${movieDetails.budget} $` : 'N/A'}
+            </div>
+          </div>
+
           <h3>Synopsis</h3>
-          <p>{movieDetails.Plot}</p>
-          
-          <h3>Métadonnées</h3>
-          <ul style={{ listStyleType: 'none', padding: 0 }}>
-            <li><strong>Réalisateur(s) :</strong> {movieDetails.Director}</li>
-            <li><strong>Genre :</strong> {movieDetails.Genre}</li>
-            <li><strong>Acteurs :</strong> {movieDetails.Actors}</li>
-            <li><strong>Évaluation :</strong> {movieDetails.imdbRating} / 10</li>
-          </ul>
+          <p className="movie-details-synopsis">
+            {movieDetails.synopsis || "Aucun synopsis disponible pour ce film."}
+          </p>
         </article>
-      </div>
+      </section>
     </main>
   );
 };

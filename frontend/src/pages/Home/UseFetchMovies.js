@@ -7,7 +7,7 @@ export function UseFetchMovies() {
   useEffect(() => {
     getMovies()
       .then((moviesData) => {
-        console.log(moviesData);
+        console.log("Films reçus :", moviesData);
         setMovies(moviesData);
       })
       .catch((error) => {
@@ -17,9 +17,3 @@ export function UseFetchMovies() {
 
   return movies;
 }
-
-getMovies()
-  .then((moviesData) => {
-    console.log("Films reçus :", moviesData);
-    setMovies(moviesData);
-  })

@@ -2,15 +2,14 @@ import React, { useState } from 'react';
 import './Home.css';
 import { Link } from 'react-router-dom';
 import { UseFetchMovies } from './UseFetchMovies';
-import Movie from '../../components/Movie/Movie'; // Ajuste le chemin si nécessaire
+import Movie from '../../components/Movie/Movie';
 
 function Home() {
   const [movieName, setMovieName] = useState('');
   const movies = UseFetchMovies();
+
   const filtered_movies = movies.filter((movie) => {
-    return (movie.name || '')
-      .toLowerCase()
-      .includes(movieName.toLowerCase());
+    return (movie.name || '').toLowerCase().includes(movieName.toLowerCase());
   });
 
   return (
