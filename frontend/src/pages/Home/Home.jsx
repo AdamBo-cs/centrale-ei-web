@@ -3,7 +3,6 @@ import './Home.css';
 import { Link } from 'react-router-dom';
 import { UseFetchMovies } from './UseFetchMovies';
 import Movie from '../../components/Movie/Movie';
-import Movie from '../../components/Movie/Movie';
 
 function Home() {
   const [sortBy, setSortBy] = useState('rating');
@@ -100,14 +99,22 @@ function Home() {
       <p>{movieName}</p>
       <h2>Films </h2>
       <div className="movies-grid">
-        {filtered_movies.map((singleMovie) => (
-          <Link
-            to={`/movies/${singleMovie.id}`}
-            key={singleMovie.id}
-            style={{ textDecoration: 'none', color: 'inherit' }}
-          >
-            <Movie movie={singleMovie} />
-          </Link>
+        {sortedMovies
+          .slice(0, visibleMovies)
+          .map((singleMovie, index) => (
+            // 1. Le Link de VOTRE code englobe le tout. 
+            // 2. La 'key' reste obligatoirement sur le parent le plus haut (le Link).
+            <Link 
+              to={`/movies/${singleMovie.id}`} 
+              key={singleMovie.id} 
+              style={{ textDecoration: 'none', color: 'inherit' }}
+            >
+              {/* 3. Le composant Movie de votre COLLÈGUE reçoit bien sa nouvelle prop 'rank' */}
+              <Movie
+                movie={singleMovie}
+                rank={index + 1}
+              />
+            </Link>
         ))}
       </div>
 
