@@ -5,24 +5,32 @@ import { UseFetchMovies } from './UseFetchMovies';
 import Movie from '../../components/Movie/Movie';
 import FilterPanel from '../../components/FilterPanel/FilterPanel';
 import { sortMovies } from '../../utils/sortMovies';
+import { extractGenres } from '../../utils/extractGenres';
+import { filterMoviesByGenres }  from '../../utils/filterMovies';
 
 function Home() {
+  const [selectedGenres, setSelectedGenres] =
+  useState([]);  
   const [sortBy, setSortBy] = useState('rating');
   const [movieName, setMovieName] = useState('');
   const [visibleMovies, setVisibleMovies] = useState(100);
+  const [durationFilters, setDurationFilters] = useState({
+    short: false,
+    medium: false,
+    long: false,
+  });
+  const [genreMode, setGenreMode] = useState('OR');
+
   const movies = UseFetchMovies();
+  
+  const genres = extractGenres(movies);
 
   const filtered_movies = movies.filter((movie) => {
     return (movie.name || '')
       .toLowerCase()
       .includes(movieName.toLowerCase());
   });
-  
-  const [durationFilters, setDurationFilters] = useState({
-    short: false,
-    medium: false,
-    long: false,
-  });
+
   const durationFilteredMovies = filtered_movies.filter(
     (movie) => {
       const duration = movie.duration;
@@ -35,7 +43,7 @@ function Home() {
       if (noFilterSelected) {
         return true;
       }
-
+      
       return (
         (durationFilters.short && duration < 60) ||
         (durationFilters.medium &&
@@ -46,8 +54,15 @@ function Home() {
     }
   );
 
+  const genreFilteredMovies =
+    filterMoviesByGenres(
+      durationFilteredMovies,
+      selectedGenres,
+      genreMode
+    );
+
   const sortedMovies = sortMovies(
-    durationFilteredMovies,
+    genreFilteredMovies,
     sortBy
   );
 
@@ -94,6 +109,11 @@ function Home() {
         <FilterPanel
           durationFilters={durationFilters}
           setDurationFilters={setDurationFilters}
+          genres={genres}
+          selectedGenres={selectedGenres}
+          setSelectedGenres={setSelectedGenres}
+          genreMode={genreMode}
+          setGenreMode={setGenreMode}
         />
     </div>
 
