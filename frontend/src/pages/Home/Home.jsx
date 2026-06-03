@@ -3,6 +3,8 @@ import './Home.css';
 import { Link } from 'react-router-dom';
 import { UseFetchMovies } from './UseFetchMovies';
 import Movie from '../../components/Movie/Movie';
+import FilterPanel from '../../components/FilterPanel/FilterPanel';
+import { sortMovies } from '../../utils/sortMovies';
 
 function Home() {
   const [sortBy, setSortBy] = useState('rating');
@@ -16,7 +18,6 @@ function Home() {
       .includes(movieName.toLowerCase());
   });
   
-  const [showFilters, setShowFilters] = useState(false);
   const [durationFilters, setDurationFilters] = useState({
     short: false,
     medium: false,
@@ -45,46 +46,10 @@ function Home() {
     }
   );
 
-  const sortedMovies = [...durationFilteredMovies];
-
-  if (sortBy === 'name') {
-        sortedMovies.sort(
-          (a, b) =>
-            (a.name || '').localeCompare(b.name || '')
-        );
-      }
-
-      if (sortBy === 'date-asc') {
-        sortedMovies.sort((a, b) => {
-          if (!a.date) return 1;
-          if (!b.date) return -1;
-
-          return new Date(a.date) - new Date(b.date);
-        });
-      }
-
-      if (sortBy === 'date-desc') {
-        sortedMovies.sort((a, b) => {
-          if (!a.date) return 1;
-          if (!b.date) return -1;
-
-          return new Date(b.date) - new Date(a.date);
-        });
-      }
-
-      if (sortBy === 'rating-desc') {
-        sortedMovies.sort(
-          (a, b) =>
-            (b.rating || 0) - (a.rating || 0)
-        );
-      }
-
-      if (sortBy === 'rating-asc') {
-        sortedMovies.sort(
-          (a, b) =>
-            (a.rating || 0) - (b.rating || 0)
-        );
-      }
+  const sortedMovies = sortMovies(
+    durationFilteredMovies,
+    sortBy
+  );
 
   return (
     <div className="App">
@@ -126,60 +91,10 @@ function Home() {
           </option>
         </select>
 
-        <div className="filter-container">
-
-          <button
-            onClick={() => setShowFilters(!showFilters)}
-          >
-            Filtrer
-          </button>
-      
-        {showFilters && (
-          <div className="filter-panel">
-            <label>
-              <input
-                type="checkbox"
-                checked={durationFilters.short}
-                onChange={() =>
-                  setDurationFilters({
-                    ...durationFilters,
-                    short: !durationFilters.short,
-                  })
-                }
-              />
-              &lt; 1h
-            </label>
-
-            <label>
-              <input
-                type="checkbox"
-                checked={durationFilters.medium}
-                onChange={() =>
-                  setDurationFilters({
-                    ...durationFilters,
-                    medium: !durationFilters.medium,
-                  })
-                }
-              />
-              1h - 2h
-            </label>
-
-            <label>
-              <input
-                type="checkbox"
-                checked={durationFilters.long}
-                onChange={() =>
-                  setDurationFilters({
-                    ...durationFilters,
-                    long: !durationFilters.long,
-                  })
-                }
-              />
-              &gt; 2h
-            </label>
-          </div>
-        )}
-      </div>
+        <FilterPanel
+          durationFilters={durationFilters}
+          setDurationFilters={setDurationFilters}
+        />
     </div>
 
       <p>{movieName}</p>
