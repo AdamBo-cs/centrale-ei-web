@@ -60,4 +60,4 @@ def recommander_top_5(movie_id_cible):
         
     return top_5
 
-recommander_top_5(200)
+recommander_top_5(100)
