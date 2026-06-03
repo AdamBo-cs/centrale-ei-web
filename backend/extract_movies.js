@@ -19,10 +19,10 @@ appDataSource.initialize()
 
     console.log("Récupération des films");
 
-    // Récupération des 10 premières pages des films les mieux notés
+    // Récupération des 20 premières pages des films les mieux notés
     const pageRequests = [];
 
-    for (let page = 1; page <= 10; page++) {
+    for (let page = 1; page <= 30; page++) {
       pageRequests.push(
         fetch(
           `https://api.themoviedb.org/3/movie/top_rated?language=fr-FR&page=${page}`,
@@ -91,7 +91,7 @@ appDataSource.initialize()
 
   })
 
-  .then(function (movieDetails) {
+.then(function (movieDetails) {
     console.log("Insertion dans la base de données");
 
     const movieRepository = appDataSource.getRepository(Movie);
@@ -99,10 +99,13 @@ appDataSource.initialize()
     const insertRequests = [];
 
     movieDetails.forEach(function (movie) {
+      if (!movie || (!movie.title && !movie.original_title)) {
+        return; 
+      }
 
       // Création de l'objet correspondant à l'entité Movie
       const newMovie = movieRepository.create({
-        name: movie.title || movie.original_title || "Titre inconnu",
+        name: movie.title || movie.original_title, // Suppression du "Titre inconnu" devenu inutile
         date: movie.release_date || "Date inconnue",
         image: movie.poster_path,
         synopsis: movie.overview || "Aucun résumé disponible.",
@@ -121,8 +124,6 @@ appDataSource.initialize()
         homepage: movie.homepage || "",
         genres: movie.genres ? movie.genres.map(g => g.name).join(', ') : "Inconnu"
       });
-      console.log(newMovie.genres);
-
       insertRequests.push(
         movieRepository.insert(newMovie)
       );
