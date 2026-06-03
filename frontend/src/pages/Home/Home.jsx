@@ -15,7 +15,37 @@ function Home() {
       .toLowerCase()
       .includes(movieName.toLowerCase());
   });
-  const sortedMovies = [...filtered_movies];
+  
+  const [showFilters, setShowFilters] = useState(false);
+  const [durationFilters, setDurationFilters] = useState({
+    short: false,
+    medium: false,
+    long: false,
+  });
+  const durationFilteredMovies = filtered_movies.filter(
+    (movie) => {
+      const duration = movie.duration;
+
+      const noFilterSelected =
+        !durationFilters.short &&
+        !durationFilters.medium &&
+        !durationFilters.long;
+
+      if (noFilterSelected) {
+        return true;
+      }
+
+      return (
+        (durationFilters.short && duration < 60) ||
+        (durationFilters.medium &&
+          duration >= 60 &&
+          duration <= 120) ||
+        (durationFilters.long && duration > 120)
+      );
+    }
+  );
+
+  const sortedMovies = [...durationFilteredMovies];
 
   if (sortBy === 'name') {
         sortedMovies.sort(
@@ -71,7 +101,8 @@ function Home() {
         />
       </div>
 
-      <div className="sort-container">
+      <div className="controls-container">
+
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value)}
@@ -94,7 +125,62 @@ function Home() {
             Le moins populaire
           </option>
         </select>
+
+        <div className="filter-container">
+
+          <button
+            onClick={() => setShowFilters(!showFilters)}
+          >
+            Filtrer
+          </button>
+      
+        {showFilters && (
+          <div className="filter-panel">
+            <label>
+              <input
+                type="checkbox"
+                checked={durationFilters.short}
+                onChange={() =>
+                  setDurationFilters({
+                    ...durationFilters,
+                    short: !durationFilters.short,
+                  })
+                }
+              />
+              &lt; 1h
+            </label>
+
+            <label>
+              <input
+                type="checkbox"
+                checked={durationFilters.medium}
+                onChange={() =>
+                  setDurationFilters({
+                    ...durationFilters,
+                    medium: !durationFilters.medium,
+                  })
+                }
+              />
+              1h - 2h
+            </label>
+
+            <label>
+              <input
+                type="checkbox"
+                checked={durationFilters.long}
+                onChange={() =>
+                  setDurationFilters({
+                    ...durationFilters,
+                    long: !durationFilters.long,
+                  })
+                }
+              />
+              &gt; 2h
+            </label>
+          </div>
+        )}
       </div>
+    </div>
 
       <p>{movieName}</p>
       <h2>Films </h2>
