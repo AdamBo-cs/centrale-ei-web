@@ -39,6 +39,13 @@ function Movie({ movie }) {
             Sortie : {movie.date || 'Inconnue'}
           </p>
         </p>
+
+        <p className="movie-duration">
+          <p className="movie-duration">
+            {movie.duration || 'Inconnue'} min
+          </p>
+        </p>
+
       </div>
     </div>
   );
