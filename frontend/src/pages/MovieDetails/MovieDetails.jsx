@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import './moviedetails.css'; // <-- Importation de votre nouvelle feuille de style
+import './moviedetails.css'; // 
 
 const MovieDetails = () => {
   const { id } = useParams();
