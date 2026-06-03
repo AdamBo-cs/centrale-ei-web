@@ -4,6 +4,7 @@ import { UseFetchMovies } from './UseFetchMovies';
 import Movie from '../../components/Movie/Movie';
 
 function Home() {
+  const [sortBy, setSortBy] = useState('rating');
   const [movieName, setMovieName] = useState('');
   const [visibleMovies, setVisibleMovies] = useState(100);
   const movies = UseFetchMovies();
@@ -12,6 +13,46 @@ function Home() {
       .toLowerCase()
       .includes(movieName.toLowerCase());
   });
+  const sortedMovies = [...filtered_movies];
+
+  if (sortBy === 'name') {
+        sortedMovies.sort(
+          (a, b) =>
+            (a.name || '').localeCompare(b.name || '')
+        );
+      }
+
+      if (sortBy === 'date-asc') {
+        sortedMovies.sort((a, b) => {
+          if (!a.date) return 1;
+          if (!b.date) return -1;
+
+          return new Date(a.date) - new Date(b.date);
+        });
+      }
+
+      if (sortBy === 'date-desc') {
+        sortedMovies.sort((a, b) => {
+          if (!a.date) return 1;
+          if (!b.date) return -1;
+
+          return new Date(b.date) - new Date(a.date);
+        });
+      }
+
+      if (sortBy === 'rating-desc') {
+        sortedMovies.sort(
+          (a, b) =>
+            (b.rating || 0) - (a.rating || 0)
+        );
+      }
+
+      if (sortBy === 'rating-asc') {
+        sortedMovies.sort(
+          (a, b) =>
+            (a.rating || 0) - (b.rating || 0)
+        );
+      }
 
   return (
     <div className="App">
@@ -27,10 +68,36 @@ function Home() {
           onChange={(e) => setMovieName(e.target.value)}
         />
       </div>
+
+      <div className="sort-container">
+        <select
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+        >          
+          <option value="name">Ordre alphabétique</option>
+
+          <option value="date-desc">
+            Date (plus récent)
+          </option>
+
+          <option value="date-asc">
+            Date (plus ancien)
+          </option>
+
+          <option value="rating-desc">
+            Le plus populaire
+          </option>
+
+          <option value="rating-asc">
+            Le moins populaire
+          </option>
+        </select>
+      </div>
+
       <p>{movieName}</p>
       <h2>Films </h2>
       <div className="movies-grid">
-        {filtered_movies
+        {sortedMovies
           .slice(0, visibleMovies)
           .map((singleMovie, index) => (
             <Movie
@@ -41,7 +108,7 @@ function Home() {
         ))}
       </div>
 
-      {visibleMovies < filtered_movies.length && (
+      {visibleMovies < sortedMovies.length && (
         <button
           onClick={() => setVisibleMovies(visibleMovies + 20)}
         >
