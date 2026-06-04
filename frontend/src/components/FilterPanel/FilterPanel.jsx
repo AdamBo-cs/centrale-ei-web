@@ -27,7 +27,7 @@ function FilterPanel({
   
   return (
     <div className="filter-container">
-      <button
+      <button className="btn"
         onClick={() => setShowFilters(!showFilters)}
       >
         Filtrer
