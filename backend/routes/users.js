@@ -167,7 +167,7 @@ router.post('/:userId/ratings', function (req, res) {
   const ratingRepository = appDataSource.getRepository(Rating);
   const userId = parseInt(req.params.userId, 10);
   const movieId = parseInt(req.body.movieId, 10);
-  const score = parseInt(req.body.score, 10);
+  const score = parseFloat(req.body.score);
 
   ratingRepository.findOneBy({ userId: userId, movieId: movieId })
     .then(function (existingRating) {

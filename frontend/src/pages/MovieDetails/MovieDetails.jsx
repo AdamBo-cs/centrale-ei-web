@@ -2,12 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import './moviedetails.css'; // <-- Importation de votre nouvelle feuille de style
 import RecoGrid from '../RecoGrid/RecoGrid'; // <-- AJOUT de l'import
+import StarRating from './StarRating'; // Ajuste le chemin si tu l'as mis dans un autre dossier
+import { useAuth } from '../../context/AuthContext'; // Vérifie que le chemin est correct selon l'emplacement de ton fichier
 
 const MovieDetails = () => {
   const { id } = useParams();
+  const { currentUser } = useAuth();
   const [movieDetails, setMovieDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  // Nouveaux états pour la fonctionnalité de notation
+  const [userRating, setUserRating] = useState(0); 
+  const [isSubmittingRating, setIsSubmittingRating] = useState(false);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -82,6 +88,42 @@ const MovieDetails = () => {
       : path;
   };
 
+  const handleRatingChange = async (newRating) => {
+    // On vérifie currentUser au lieu de user
+    if (!currentUser) {
+      alert("Vous devez être connecté pour noter un film !");
+      return;
+    }
+
+    setUserRating(newRating);
+    setIsSubmittingRating(true);
+
+    try {
+      // On utilise currentUser.id
+      const response = await fetch(`http://localhost:8000/users/${currentUser.id}/ratings`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          movieId: id, 
+          score: newRating 
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Erreur lors de l'enregistrement de la note");
+      }
+
+      console.log("Note enregistrée avec succès en base de données !");
+    } catch (err) {
+      console.error(err.message);
+      alert("Impossible de sauvegarder la note.");
+    } finally {
+      setIsSubmittingRating(false);
+    }
+  };
+
   return (
     <main className="movie-details-main">
       {movieDetails.banner && (
@@ -135,6 +177,14 @@ const MovieDetails = () => {
               <strong>Budget :</strong>{' '}
               {movieDetails.budget ? `${movieDetails.budget} $` : 'N/A'}
             </div>
+          </div>
+
+          <div className="movie-details-user-rating">
+            <h3>Noter ce film :</h3>
+            <StarRating 
+              value={userRating} 
+              onChange={handleRatingChange} 
+            />
           </div>
 
           <h3>Synopsis</h3>
