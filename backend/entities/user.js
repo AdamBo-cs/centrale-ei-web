@@ -22,6 +22,9 @@ const User = new typeorm.EntitySchema({
       type: String, 
       default: 'light' // Préférence visuelle par défaut
     },
+    isPublic: {
+      type: Boolean,
+      default: true}
   },
 });
 
