@@ -1,0 +1,76 @@
+.reco-section {
+  margin-top: 50px;
+  border-top: 2px solid #282c34;
+  padding-top: 30px;
+  width: 100%;
+}
+
+.reco-title {
+  font-size: 1.6rem;
+  margin-bottom: 25px;
+  color: #e0e0e0;
+  font-weight: bold;
+}
+
+.reco-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+}
+
+.reco-card {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
+  background: #282c34;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.reco-card:hover {
+  transform: translateY(-8px);
+}
+
+.reco-thumb {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 2/3;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.reco-thumb-placeholder {
+  width: 100%;
+  aspect-ratio: 2/3;
+  background-color: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  color: #7f8c8d;
+}
+
+.reco-name {
+  margin: 12px 0 4px 0;
+  font-size: 1rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.reco-genre-badge {
+  font-size: 0.8rem;
+  color: #e0e0e0;
+  font-weight: 500;
+}
+
+.reco-loading {
+  text-align: center;
+  padding: 20px;
+  color: #7f8c8d;
+  font-style: italic;
+}

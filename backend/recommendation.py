@@ -52,12 +52,32 @@ def recommander_top_5(movie_id_cible):
     # tri des films en fonction de leur score
     scores_tries = sorted(scores_similarite, key=lambda x: x[2], reverse=True)
     top_5 = scores_tries[:5]
+    top_5_ids = [film_id for film_id, titre, score in scores_tries[:5]]
     
     # affichage des films similaires
-    print(f"\n--- Films similaires à : {titre_cible} ---")
-    for rang, (film_id, titre, score) in enumerate(top_5, 1):
-        print(f"{rang}. {titre} (Score de proximité : {score:.3f})")
+    # print(f"\n--- Films similaires à : {titre_cible} ---")
+    # for rang, (film_id, titre, score) in enumerate(top_5, 1):
+    #     print(f"{rang}. {titre} (Score de proximité : {score:.3f})")
         
-    return top_5
+    return top_5_ids
 
-recommander_top_5(100)
+#print(recommander_top_5(100))
+# ... tout le début de ton code reste identique (calculer_cosinus, recommander_top_5) ...
+
+# =====================================================================
+# AJOUTE CE BLOC À LA TOUTE FIN DE TON FICHIER (À LA PLACE DE TON PRINT COMMENTÉ)
+# =====================================================================
+if __name__ == "__main__":
+    import sys # Indispensable pour intercepter l'ID envoyé par Node.js
+    
+    # Si Node.js a passé un argument (ex: `python recommendation.py 2`)
+    if len(sys.argv) > 1:
+        try:
+            id_cible = int(sys.argv[1])   # On récupère l'ID reçu
+            resultat = recommander_top_5(id_cible)
+            print(json.dumps(resultat))   # On renvoie [45, 12, 88...] à Node.js
+        except Exception as e:
+            print(json.dumps([]))         # En cas de bug, on renvoie un tableau vide propre
+    else:
+        # Si tu lances le fichier manuellement dans ton terminal pour tester
+        print(json.dumps(recommander_top_5(100)))

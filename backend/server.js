@@ -7,6 +7,7 @@ import usersRouter from './routes/users.js';
 import moviesRouter from './routes/movies.js';
 import { jsonErrorHandler } from './services/jsonErrorHandler.js';
 import { routeNotFoundJsonHandler } from './services/routeNotFoundJsonHandler.js';
+import recommendationRouter from './routes/reco_router.js'; 
 
 const startServer = async () => {
   console.log('Data Source has been initialized!');
@@ -19,6 +20,8 @@ const startServer = async () => {
 
   // Register routes
   app.use('/', indexRouter);
+  app.use(recommendationRouter);
+
   app.use('/users', usersRouter);
   app.use('/movies', moviesRouter);
 
