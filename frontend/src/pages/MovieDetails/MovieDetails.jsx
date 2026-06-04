@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+<<<<<<< HEAD
 import './moviedetails.css'; // 
+=======
+import './moviedetails.css'; // <-- Importation de votre nouvelle feuille de style
+import RecoGrid from '../RecoGrid/RecoGrid'; // <-- AJOUT de l'import
+>>>>>>> reco_page
 
 const MovieDetails = () => {
   const { id } = useParams();
@@ -17,7 +22,7 @@ const MovieDetails = () => {
         setError(null);
 
         const urlBackEnd = `http://localhost:8000/movies/${id}`;
-        console.log("📡 Envoi de la requête vers :", urlBackEnd);
+        console.log(" Envoi de la requête vers :", urlBackEnd);
 
         const response = await fetch(urlBackEnd, {
           signal: abortController.signal,
@@ -35,7 +40,7 @@ const MovieDetails = () => {
         
       } catch (err) {
         if (err.name !== 'AbortError') {
-          console.error("❌ Une erreur est survenue :", err.message);
+          console.error("Une erreur est survenue :", err.message);
           setError(err.message);
         }
       } finally {
@@ -122,6 +127,7 @@ const MovieDetails = () => {
           </p>
         </article>
       </section>
+      <RecoGrid currentMovieId={id} />
     </main>
   );
 };
