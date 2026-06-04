@@ -99,6 +99,7 @@ function Home() {
       <div className="controls-container">
 
         <select
+          className="select-style"
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value)}
         >          
@@ -140,7 +141,6 @@ function Home() {
     </div>
 
       <p>{movieName}</p>
-      <h2>Films </h2>
       <div className="movies-grid">
         {sortedMovies
           .slice(0, visibleMovies)

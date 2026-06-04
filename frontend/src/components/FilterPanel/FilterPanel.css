@@ -1,3 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rubik+Dirt&display=swap');
+
 .filter-button-container {
   display: flex;
   justify-content: flex-end;
@@ -15,14 +21,17 @@
 
   padding: 15px;
 
-  border: 1px solid #ccc;
+  border: 1px solid var(--accent-light);
   border-radius: 8px;
+  box-shadow: 0 4px 12px var(--shadow);
 
-  background-color: #282c34;
+  background-color: var(--paper-dark);
 
   text-align: left;
 
   z-index: 9999;
+  
+  color: var(--ink);
 }
 
 .filter-panel label {
@@ -41,10 +50,10 @@
   padding: 6px 12px;
   margin: 4px;
 
-  border: 1px solid #c8bca8;
+  border: 1px solid var(--accent);
   border-radius: 6px;
 
-  background-color: #282C34;
+  background-color: var(--paper);
 
   cursor: pointer;
 
@@ -52,11 +61,11 @@
 }
 
 .genre-tag:hover {
-  background-color: #8992A4;
+  background-color: var(--accent-light);
 }
 
 .genre-tag.selected {
-  background-color: #8992A4;
+  background-color: var(--accent);
   border-color: #f2ece0;
 
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
@@ -118,7 +127,7 @@
 }
 
 .switch input:checked + .slider {
-  background-color: #4CAF50;
+  background-color: var(--accent);
 }
 
 .switch input:checked + .slider:before {
