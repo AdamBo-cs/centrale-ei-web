@@ -42,7 +42,7 @@ export default class InitialSchema1780564584943 {
                 "id" integer PRIMARY KEY AUTOINCREMENT NOT NULL,
                 "userId" integer NOT NULL,
                 "movieId" integer NOT NULL,
-                "score" integer NOT NULL,
+                "score" float NOT NULL,
                 CONSTRAINT "UNIQUE_USER_MOVIE" UNIQUE ("userId", "movieId")
             )
         `);

@@ -21,6 +21,8 @@ const Header = () => {
       <Link className="Link" to="/users">Users</Link>
       <div>|</div>
       <Link className="Link" to="/about">About</Link>
+      <div>|</div>
+      <Link className="Link" to="/profile">Profile</Link>
 
       {/* Cet espace flexible pousse le bloc de connexion tout à droite de la barre */}
       <div style={{ flexGrow: 1 }}></div>

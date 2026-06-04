@@ -2,7 +2,8 @@ import express from 'express';
 import { appDataSource } from '../datasource.js';
 import User from '../entities/user.js';
 import Rating from '../entities/rating.js';
-import { Like } from 'typeorm'; // Import indispensable pour la recherche partielle
+import { Like, In } from 'typeorm'; // Ajoute 'In' à côté de 'Like'
+import { Movie } from '../entities/movie.js'; // Ajoute l'import du film (attention aux accolades, c'est un export nommé !)
 
 const router = express.Router();
 
@@ -94,15 +95,15 @@ router.post('/login', function (req, res) {
     });
 });
 
-// 5. Récupérer le profil et les notes d'un utilisateur (Avec gestion privé/public)
+// 5. Récupérer le profil et les notes d'un utilisateur (Avec gestion privé/public et détails des films)
 router.get('/:userId/profile', async function (req, res) {
   try {
     const userId = parseInt(req.params.userId, 10);
-    // On extrait l'ID de la personne qui navigue (le viewer) passé en paramètre de requête
     const viewerId = parseInt(req.query.viewerId, 10);
     
     const userRepository = appDataSource.getRepository(User);
     const ratingRepository = appDataSource.getRepository(Rating);
+    const movieRepository = appDataSource.getRepository(Movie);
 
     const user = await userRepository.findOneBy({ id: userId });
     
@@ -112,23 +113,39 @@ router.get('/:userId/profile', async function (req, res) {
 
     const { password, ...safeUser } = user;
 
-    // --- LOGIQUE DE CONFIDENTIALITÉ ---
-    // Si le compte ciblé est privé ET que la personne qui regarde n'est pas le propriétaire du compte
+    // Si privé et pas le propriétaire : on bloque les données
     if (!user.isPublic && userId !== viewerId) {
-      return res.json({ 
-        user: safeUser, 
-        ratings: [], // On n'envoie aucune note
-        isPrivateAccess: true // Flag pour indiquer au frontend d'afficher un message de verrouillage
-      });
+      return res.json({ user: safeUser, ratings: [], isPrivateAccess: true });
     }
 
-    // Sinon (le compte est public OU l'utilisateur regarde son propre profil), on va chercher ses notes
+    // 1. On récupère les notes de l'utilisateur
     const ratings = await ratingRepository.findBy({ userId: userId });
-    res.json({ 
-      user: safeUser, 
-      ratings: ratings, 
-      isPrivateAccess: false 
+    
+    // Si aucune note, on renvoie tout de suite un tableau vide
+    if (ratings.length === 0) {
+      return res.json({ user: safeUser, ratings: [], isPrivateAccess: false });
+    }
+
+    // 2. On récupère les détails des films correspondants aux notes
+    const movieIds = ratings.map(r => r.movieId);
+    const movies = await movieRepository.find({
+      where: { id: In(movieIds) } // On cherche tous les films dont l'ID est dans notre liste
     });
+
+    // 3. On fusionne la note et les détails du film pour le frontend
+    const enrichedRatings = ratings.map(rating => {
+      const movieDetails = movies.find(m => m.id === rating.movieId);
+      return {
+        id: rating.movieId,          // Pour la navigation vers la page du film
+        name: movieDetails?.name,    // Le titre
+        image: movieDetails?.image,  // L'affiche
+        date: movieDetails?.date,    // L'année
+        score: rating.score          // La note (le plus important !)
+      };
+    });
+
+    // On renvoie notre tableau enrichi !
+    res.json({ user: safeUser, ratings: enrichedRatings, isPrivateAccess: false });
     
   } catch (error) {
     console.error(error);
@@ -167,7 +184,7 @@ router.post('/:userId/ratings', function (req, res) {
   const ratingRepository = appDataSource.getRepository(Rating);
   const userId = parseInt(req.params.userId, 10);
   const movieId = parseInt(req.body.movieId, 10);
-  const score = parseInt(req.body.score, 10);
+  const score = parseFloat(req.body.score);
 
   ratingRepository.findOneBy({ userId: userId, movieId: movieId })
     .then(function (existingRating) {
@@ -186,6 +203,26 @@ router.post('/:userId/ratings', function (req, res) {
       console.error(error);
       res.status(500).json({ message: 'Erreur lors de la sauvegarde de la note' });
     });
+});
+
+// 7b. Récupérer la note d'un utilisateur spécifique pour un film spécifique
+router.get('/:userId/ratings/:movieId', async function (req, res) {
+  try {
+    const userId = parseInt(req.params.userId, 10);
+    const movieId = parseInt(req.params.movieId, 10);
+    
+    const ratingRepository = appDataSource.getRepository(Rating);
+    const rating = await ratingRepository.findOneBy({ userId: userId, movieId: movieId });
+
+    if (rating) {
+      res.json({ score: rating.score });
+    } else {
+      res.json({ score: 0 }); // Pas encore de note
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Erreur lors de la récupération de la note' });
+  }
 });
 
 // 8. Supprimer un utilisateur

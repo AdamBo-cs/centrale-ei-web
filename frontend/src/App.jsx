@@ -7,6 +7,8 @@ import Users from './pages/Users/Users';
 import MovieDetails from './pages/MovieDetails/MovieDetails';
 import Login from './pages/Login/Login'
 import Register from './pages/Register/Register';
+import Profile from './pages/Profile/Profile';
+
 
 function App() {
   return (
@@ -19,6 +21,7 @@ function App() {
         <Route path="movies/:id" element={<MovieDetails />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
+        <Route path="profile" element={<Profile />} />
       </Routes>
     </Layout>
   );
