@@ -4,9 +4,14 @@ import './FilterPanel.css';
 function FilterPanel({
   durationFilters,
   setDurationFilters,
+
+  minRating,
+  setMinRating,
+
   genres,
   selectedGenres,
   setSelectedGenres,
+  
   genreMode,
   setGenreMode,
 }) {
@@ -23,6 +28,67 @@ function FilterPanel({
       {showFilters && (
         <div className="filter-panel">
           <div className="filter-section">
+
+          <div className="reset-container">  
+            <button
+              className="reset-filters-btn"
+              onClick={() => {
+                setMinRating(0);
+
+                setDurationFilters({
+                  short: false,
+                  medium: false,
+                  long: false,
+                });
+
+                setSelectedGenres([]);
+              }}
+            >
+              Réinitialiser les filtres
+            </button>
+          </div>
+
+            <h4>Note minimale</h4>
+              <label>
+                <input
+                  type="radio"
+                  name="rating"
+                  checked={minRating === 1}
+                  onChange={() => setMinRating(1)}
+                />
+                ★☆☆☆☆ (1+)
+              </label>
+
+              <label>
+                <input
+                  type="radio"
+                  name="rating"
+                  checked={minRating === 2}
+                  onChange={() => setMinRating(2)}
+                />
+                ★★☆☆☆ (2+)
+              </label>
+
+              <label>
+                <input
+                  type="radio"
+                  name="rating"
+                  checked={minRating === 3}
+                  onChange={() => setMinRating(3)}
+                />
+                ★★★☆☆ (3+)
+              </label>
+
+              <label>
+                <input
+                  type="radio"
+                  name="rating"
+                  checked={minRating === 4}
+                  onChange={() => setMinRating(4)}
+                />
+                ★★★★☆ (4+)
+              </label>
+
             <h4>Durée</h4>
             <label>
               <input
@@ -127,20 +193,6 @@ function FilterPanel({
             </div>
           </div>
 
-          <button
-            className="reset-filters-btn"
-            onClick={() => {
-              setDurationFilters({
-                short: false,
-                medium: false,
-                long: false,
-              });
-
-              setSelectedGenres([]);
-            }}
-          >
-            Réinitialiser les filtres
-          </button>
         </div>
       )}
     </div>

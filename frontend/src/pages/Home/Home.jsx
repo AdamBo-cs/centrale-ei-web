@@ -6,7 +6,11 @@ import Movie from '../../components/Movie/Movie';
 import FilterPanel from '../../components/FilterPanel/FilterPanel';
 import { sortMovies } from '../../utils/sortMovies';
 import { extractGenres } from '../../utils/extractGenres';
-import { filterMoviesByGenres }  from '../../utils/filterMovies';
+import {
+  filterMoviesByGenres,
+  filterMoviesByRating,
+  filterMoviesByDuration,
+} from '../../utils/filterMovies';
 
 function Home() {
   const [selectedGenres, setSelectedGenres] =
@@ -19,6 +23,8 @@ function Home() {
     medium: false,
     long: false,
   });
+  const [minRating, setMinRating] = useState(0);
+
   const [genreMode, setGenreMode] = useState('OR');
 
   const movies = UseFetchMovies();
@@ -31,28 +37,17 @@ function Home() {
       .includes(movieName.toLowerCase());
   });
 
-  const durationFilteredMovies = filtered_movies.filter(
-    (movie) => {
-      const duration = movie.duration;
+  const ratingFilteredMovies =
+    filterMoviesByRating(
+      filtered_movies,
+      minRating
+    );
 
-      const noFilterSelected =
-        !durationFilters.short &&
-        !durationFilters.medium &&
-        !durationFilters.long;
-
-      if (noFilterSelected) {
-        return true;
-      }
-      
-      return (
-        (durationFilters.short && duration < 60) ||
-        (durationFilters.medium &&
-          duration >= 60 &&
-          duration <= 120) ||
-        (durationFilters.long && duration > 120)
-      );
-    }
-  );
+  const durationFilteredMovies =
+    filterMoviesByDuration(
+      ratingFilteredMovies,
+      durationFilters
+    );
 
   const genreFilteredMovies =
     filterMoviesByGenres(
@@ -109,6 +104,8 @@ function Home() {
         <FilterPanel
           durationFilters={durationFilters}
           setDurationFilters={setDurationFilters}
+          minRating={minRating}
+          setMinRating={setMinRating}
           genres={genres}
           selectedGenres={selectedGenres}
           setSelectedGenres={setSelectedGenres}
@@ -123,14 +120,11 @@ function Home() {
         {sortedMovies
           .slice(0, visibleMovies)
           .map((singleMovie, index) => (
-            // 1. Le Link de VOTRE code englobe le tout. 
-            // 2. La 'key' reste obligatoirement sur le parent le plus haut (le Link).
             <Link 
               to={`/movies/${singleMovie.id}`} 
               key={singleMovie.id} 
               style={{ textDecoration: 'none', color: 'inherit' }}
             >
-              {/* 3. Le composant Movie de votre COLLÈGUE reçoit bien sa nouvelle prop 'rank' */}
               <Movie
                 movie={singleMovie}
                 rank={index + 1}

@@ -96,3 +96,14 @@
 .switch input:checked + .slider:before {
   transform: translateX(26px);
 }
+
+.reset-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 15px;
+}
+
+.reset-filters-btn {
+  display: block;
+  margin-left: auto;
+}
