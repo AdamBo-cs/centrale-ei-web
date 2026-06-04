@@ -67,7 +67,7 @@ function FilterPanel({
                   type="radio"
                   name="rating"
                   checked={minRating === 1}
-                  onChange={() => setMinRating(1)}
+                  onClick={() => setMinRating(minRating === 1 ? 0 : 1)}
                 />
                 ★☆☆☆☆ (1+)
               </label>
@@ -77,7 +77,7 @@ function FilterPanel({
                   type="radio"
                   name="rating"
                   checked={minRating === 2}
-                  onChange={() => setMinRating(2)}
+                  onClick={() => setMinRating(minRating === 2 ? 0 : 2)}
                 />
                 ★★☆☆☆ (2+)
               </label>
@@ -87,7 +87,7 @@ function FilterPanel({
                   type="radio"
                   name="rating"
                   checked={minRating === 3}
-                  onChange={() => setMinRating(3)}
+                  onClick={() => setMinRating(minRating === 3 ? 0 : 3)}
                 />
                 ★★★☆☆ (3+)
               </label>
@@ -97,7 +97,7 @@ function FilterPanel({
                   type="radio"
                   name="rating"
                   checked={minRating === 4}
-                  onChange={() => setMinRating(4)}
+                  onClick={() => setMinRating(minRating === 4 ? 0 : 4)}
                 />
                 ★★★★☆ (4+)
               </label>
