@@ -15,10 +15,13 @@ function FilterPanel({
   
   genreMode,
   setGenreMode,
+  genreCounts,
 
   languages,
   selectedLanguages,
   setSelectedLanguages,
+
+  activeFiltersCount,
 }) {
   const [showFilters, setShowFilters] = useState(false);
   
@@ -28,6 +31,8 @@ function FilterPanel({
         onClick={() => setShowFilters(!showFilters)}
       >
         Filtrer
+        {activeFiltersCount > 0 &&
+          ` (${activeFiltersCount})`}
       </button>
 
       {showFilters && (
@@ -167,36 +172,30 @@ function FilterPanel({
 
             </div>
 
-            <p>
-              Mode :
-              {genreMode === 'OR'
-                ? ' au moins un genre'
-                : ' tous les genres'}
-            </p>
-
             <div className="genres-grid">
               {genres.map((genre) => (
-                <label key={genre}>
-                  <input
-                    type="checkbox"
-                    checked={selectedGenres.includes(genre)}
-                    onChange={() => {
-                      if (selectedGenres.includes(genre)) {
-                        setSelectedGenres(
-                          selectedGenres.filter(
-                            (g) => g !== genre
-                          )
-                        );
-                      } else {
-                        setSelectedGenres([
-                          ...selectedGenres,
-                          genre,
-                        ]);
-                      }
-                    }}
-                  />
-                  {genre}
-                </label>
+                <div
+                  key={genre}
+                  className={`genre-tag ${
+                    selectedGenres.includes(genre)
+                      ? 'selected'
+                      : ''
+                  }`}
+                  onClick={() => {
+                    if (selectedGenres.includes(genre)) {
+                      setSelectedGenres(
+                        selectedGenres.filter((g) => g !== genre)
+                      );
+                    } else {
+                      setSelectedGenres([
+                        ...selectedGenres,
+                        genre,
+                      ]);
+                    }
+                  }}
+                >
+                  {genre} ({genreCounts?.[genre] || 0})
+                </div>
               ))}
             </div>
 

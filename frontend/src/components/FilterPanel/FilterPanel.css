@@ -36,6 +36,34 @@
   gap: 8px 24px;
 }
 
+.genre-tag {
+  display: inline-block;
+  padding: 6px 12px;
+  margin: 4px;
+
+  border: 1px solid #c8bca8;
+  border-radius: 6px;
+
+  background-color: #282C34;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.genre-tag:hover {
+  background-color: #8992A4;
+}
+
+.genre-tag.selected {
+  background-color: #8992A4;
+  border-color: #f2ece0;
+
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+
+  transform: translateY(-1px);
+}
+
 .genre-mode-container {
   display: flex;
   align-items: center;

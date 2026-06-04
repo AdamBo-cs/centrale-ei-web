@@ -13,6 +13,7 @@ import {
   filterMoviesByDuration,
   filterMoviesByLanguages,
 } from '../../utils/filterMovies';
+import { countGenres } from '../../utils/countGenres';
 
 function Home() {
   const [selectedGenres, setSelectedGenres] =
@@ -32,6 +33,8 @@ function Home() {
   const movies = UseFetchMovies();
   
   const genres = extractGenres(movies);
+
+  const genreCounts = countGenres(movies);
 
   const languages =  extractLanguages(movies);
   console.log("Languages:", languages);
@@ -71,6 +74,12 @@ function Home() {
     languageFilteredMovies,
     sortBy
   );
+
+  const activeFiltersCount =
+    Object.values(durationFilters).filter(Boolean).length
+    + (minRating > 0 ? 1 : 0)
+    + selectedGenres.length
+    + selectedLanguages.length;
 
   return (
     <div className="App">
@@ -125,6 +134,8 @@ function Home() {
           languages={languages}
           selectedLanguages={selectedLanguages}
           setSelectedLanguages={setSelectedLanguages}
+          activeFiltersCount={activeFiltersCount}
+          genreCounts={genreCounts}
         />
     </div>
 
