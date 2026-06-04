@@ -18,27 +18,42 @@ const MovieDetails = () => {
   useEffect(() => {
     const abortController = new AbortController();
 
-    const fetchMovieFromLocalAPI = async () => {
+    const fetchData = async () => {
       try {
         setIsLoading(true);
         setError(null);
 
-        const urlBackEnd = `http://localhost:8000/movies/${id}`;
-        console.log(' Envoi de la requête vers :', urlBackEnd);
-
-        const response = await fetch(urlBackEnd, {
+        // 1. Chargement des détails du film
+        const movieUrl = `http://localhost:8000/movies/${id}`;
+        const movieResponse = await fetch(movieUrl, {
           signal: abortController.signal,
-          headers: {
-            Accept: 'application/json',
-          },
+          headers: { Accept: 'application/json' },
         });
 
-        if (!response.ok) {
-          throw new Error(`Erreur HTTP : ${response.status}`);
+        if (!movieResponse.ok) {
+          throw new Error(`Erreur HTTP film : ${movieResponse.status}`);
         }
 
-        const data = await response.json();
-        setMovieDetails(data);
+        const movieData = await movieResponse.json();
+        setMovieDetails(movieData);
+
+        // 2. Chargement de la note de l'utilisateur (SEULEMENT s'il est connecté)
+        if (currentUser) {
+          const ratingUrl = `http://localhost:8000/users/${currentUser.id}/ratings/${id}`;
+          const ratingResponse = await fetch(ratingUrl, {
+            signal: abortController.signal,
+            headers: { Accept: 'application/json' },
+          });
+
+          if (ratingResponse.ok) {
+            const ratingData = await ratingResponse.json();
+            setUserRating(ratingData.score); // On applique la note existante aux étoiles
+          }
+        } else {
+          // Si l'utilisateur change de compte ou se déconnecte, on remet à 0
+          setUserRating(0); 
+        }
+
       } catch (err) {
         if (err.name !== 'AbortError') {
           console.error('Une erreur est survenue :', err.message);
@@ -49,10 +64,10 @@ const MovieDetails = () => {
       }
     };
 
-    fetchMovieFromLocalAPI();
+    fetchData();
 
     return () => abortController.abort();
-  }, [id]);
+  }, [id, currentUser]); // <--- On ajoute currentUser dans les dépendances !
 
   if (isLoading) {
     return (

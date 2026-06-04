@@ -15,7 +15,7 @@ const Rating = new typeorm.EntitySchema({
       type: Number,
     },
     score: {
-      type: Number, // La note donnée au film
+      type: 'float', // La note donnée au film
     },
   },
   uniques: [
