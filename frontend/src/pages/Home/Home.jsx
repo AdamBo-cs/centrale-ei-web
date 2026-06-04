@@ -5,51 +5,81 @@ import { UseFetchMovies } from './UseFetchMovies';
 import Movie from '../../components/Movie/Movie';
 import FilterPanel from '../../components/FilterPanel/FilterPanel';
 import { sortMovies } from '../../utils/sortMovies';
+import { extractGenres } from '../../utils/extractGenres';
+import { extractLanguages }  from '../../utils/extractLanguages';
+import {
+  filterMoviesByGenres,
+  filterMoviesByRating,
+  filterMoviesByDuration,
+  filterMoviesByLanguages,
+} from '../../utils/filterMovies';
+import { countGenres } from '../../utils/countGenres';
 
 function Home() {
+  const [selectedGenres, setSelectedGenres] =
+  useState([]);  
   const [sortBy, setSortBy] = useState('rating');
   const [movieName, setMovieName] = useState('');
   const [visibleMovies, setVisibleMovies] = useState(100);
+  const [durationFilters, setDurationFilters] = useState({
+    short: false,
+    medium: false,
+    long: false,
+  });
+  const [minRating, setMinRating] = useState(0);
+  const [genreMode, setGenreMode] = useState('OR');
+  const [selectedLanguages, setSelectedLanguages] = useState([]);
+
   const movies = UseFetchMovies();
+  
+  const genres = extractGenres(movies);
+
+  const genreCounts = countGenres(movies);
+
+  const languages =  extractLanguages(movies);
+  console.log("Languages:", languages);
 
   const filtered_movies = movies.filter((movie) => {
     return (movie.name || '')
       .toLowerCase()
       .includes(movieName.toLowerCase());
   });
+
+  const ratingFilteredMovies =
+    filterMoviesByRating(
+      filtered_movies,
+      minRating
+    );
+
+  const durationFilteredMovies =
+    filterMoviesByDuration(
+      ratingFilteredMovies,
+      durationFilters
+    );
+
+  const genreFilteredMovies =
+    filterMoviesByGenres(
+      durationFilteredMovies,
+      selectedGenres,
+      genreMode
+    );
   
-  const [durationFilters, setDurationFilters] = useState({
-    short: false,
-    medium: false,
-    long: false,
-  });
-  const durationFilteredMovies = filtered_movies.filter(
-    (movie) => {
-      const duration = movie.duration;
-
-      const noFilterSelected =
-        !durationFilters.short &&
-        !durationFilters.medium &&
-        !durationFilters.long;
-
-      if (noFilterSelected) {
-        return true;
-      }
-
-      return (
-        (durationFilters.short && duration < 60) ||
-        (durationFilters.medium &&
-          duration >= 60 &&
-          duration <= 120) ||
-        (durationFilters.long && duration > 120)
-      );
-    }
-  );
+  const languageFilteredMovies =
+    filterMoviesByLanguages(
+      genreFilteredMovies,
+      selectedLanguages
+    );
 
   const sortedMovies = sortMovies(
-    durationFilteredMovies,
+    languageFilteredMovies,
     sortBy
   );
+
+  const activeFiltersCount =
+    Object.values(durationFilters).filter(Boolean).length
+    + (minRating > 0 ? 1 : 0)
+    + selectedGenres.length
+    + selectedLanguages.length;
 
   return (
     <div className="App">
@@ -94,6 +124,18 @@ function Home() {
         <FilterPanel
           durationFilters={durationFilters}
           setDurationFilters={setDurationFilters}
+          minRating={minRating}
+          setMinRating={setMinRating}
+          genres={genres}
+          selectedGenres={selectedGenres}
+          setSelectedGenres={setSelectedGenres}
+          genreMode={genreMode}
+          setGenreMode={setGenreMode}
+          languages={languages}
+          selectedLanguages={selectedLanguages}
+          setSelectedLanguages={setSelectedLanguages}
+          activeFiltersCount={activeFiltersCount}
+          genreCounts={genreCounts}
         />
     </div>
 
@@ -103,14 +145,11 @@ function Home() {
         {sortedMovies
           .slice(0, visibleMovies)
           .map((singleMovie, index) => (
-            // 1. Le Link de VOTRE code englobe le tout. 
-            // 2. La 'key' reste obligatoirement sur le parent le plus haut (le Link).
             <Link 
               to={`/movies/${singleMovie.id}`} 
               key={singleMovie.id} 
               style={{ textDecoration: 'none', color: 'inherit' }}
             >
-              {/* 3. Le composant Movie de votre COLLÈGUE reçoit bien sa nouvelle prop 'rank' */}
               <Movie
                 movie={singleMovie}
                 rank={index + 1}
