@@ -1,0 +1,113 @@
+/* --- Conteneurs globaux --- */
+.movie-details-main {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.movie-details-loading {
+  padding: 2rem;
+  font-size: 1.2rem;
+}
+
+.movie-details-error {
+  padding: 2rem;
+  color: #d32f2f;
+  font-weight: bold;
+}
+
+/* --- Bannière --- */
+.movie-details-banner {
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.movie-details-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* --- En-tête (Titre et Slogan) --- */
+.movie-details-header {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+}
+
+.movie-details-title {
+  font-size: 2.5rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.movie-details-date {
+  color: #f9f9f9;
+  font-size: 1.5rem;
+}
+
+.movie-details-tagline {
+  font-style: italic;
+  color: #f9f9f9;
+  font-weight: normal;
+  margin-top: 0;
+}
+
+/* --- Disposition principale (Affiche + Infos) --- */
+.movie-details-content {
+  display: flex;
+  gap: 3rem;
+  flex-wrap: wrap; /* Permet de passer à la ligne sur les petits écrans */
+}
+
+/* Colonne de gauche (Affiche) */
+.movie-details-aside {
+  flex: 1 1 300px;
+  max-width: 350px;
+}
+
+.movie-details-poster {
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.movie-details-poster-placeholder {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  color: #888;
+}
+
+/* Colonne de droite (Texte et Stats) */
+.movie-details-article {
+  flex: 2 1 500px;
+}
+
+/* Grille des statistiques (Note, Durée, Budget...) */
+.movie-details-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+  background-color: #264653;
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.movie-details-stats-grid div {
+  font-size: 1rem;
+}
+
+/* Paragraphe du Synopsis */
+.movie-details-synopsis {
+  line-height: 1.6;
+  font-size: 1.1rem;
+  color: #f9f9f9;
+}

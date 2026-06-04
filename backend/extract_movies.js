@@ -19,10 +19,10 @@ appDataSource.initialize()
 
     console.log("Récupération des films");
 
-    // Récupération des 10 premières pages des films les mieux notés
+    // Récupération des 20 premières pages des films les mieux notés
     const pageRequests = [];
 
-    for (let page = 1; page <= 10; page++) {
+    for (let page = 1; page <= 30; page++) {
       pageRequests.push(
         fetch(
           `https://api.themoviedb.org/3/movie/top_rated?language=fr-FR&page=${page}`,
@@ -50,24 +50,48 @@ appDataSource.initialize()
     pages.forEach(page => {
       movies = movies.concat(page.results);
     });
-
     console.log(`${movies.length} films trouvés.`);
-    console.log("Récupération des informations des films");
+    console.log("Récupération des infos");
 
-    // Requête détaillée pour chaque film
+    // Requête détaillée à l'api
     const detailRequests = movies.map(movie => {
+      const fetchDetails = fetch(`https://api.themoviedb.org/3/movie/${movie.id}?language=fr-FR`, requestOptions).then(r => r.json());
+      const fetchCredits = fetch(`https://api.themoviedb.org/3/movie/${movie.id}/credits?language=fr-FR`, requestOptions).then(r => r.json());
+      const fetchKeywords = fetch(`https://api.themoviedb.org/3/movie/${movie.id}/keywords`, requestOptions).then(r => r.json());
+      const fetchVideos = fetch(`https://api.themoviedb.org/3/movie/${movie.id}/videos?language=fr-FR`, requestOptions).then(r => r.json());
 
-      return fetch(
-        `https://api.themoviedb.org/3/movie/${movie.id}?language=fr-FR`,
-        requestOptions
-      ).then(response => response.json());
+      // 2. On attend que les 4 réponses arrivent pour ce film précis
+      return Promise.all([fetchDetails, fetchCredits, fetchKeywords, fetchVideos])
+        .then(([details, credits, keywordsData, videosData]) => {
+          // Extraction du réalisateur (Director)
+          const directorName = credits.crew?.find(person => person.job === 'Director')?.name || "Inconnu";
+          // Extraction des 5 premiers acteurs principaux
+          const actorsList = credits.cast?.slice(0, 5).map(actor => actor.name).join(', ') || "Inconnu";
+          // Extraction des mots-clés (Keywords) sous forme de texte séparé par des virgules
+          const keywordsList = keywordsData.keywords?.map(k => k.name).join(', ') || "";
+          // Extraction de la bande-annonce YouTube principale
+          const trailer = videosData.results?.find(vid => vid.type === 'Trailer' && vid.site === 'YouTube');
+          const trailerKey = trailer ? trailer.key : "";
 
+          return {
+            ...details, //copie titre,duree etc séparement
+            director: directorName,
+            actors: actorsList,
+            keywords: keywordsList,
+            trailer_key: trailerKey
+          };
+        })
+        .catch(err => {
+          console.error(`Erreur sur le film ID ${movie.id}, ignoré.`, err);
+          return null; // En cas de bug sur un film, on renvoie null pour ne pas bloquer tout le script
+        });
     });
 
     return Promise.all(detailRequests);
+
   })
 
-  .then(function (movieDetails) {
+.then(function (movieDetails) {
     console.log("Insertion dans la base de données");
 
     const movieRepository = appDataSource.getRepository(Movie);
@@ -75,10 +99,13 @@ appDataSource.initialize()
     const insertRequests = [];
 
     movieDetails.forEach(function (movie) {
+      if (!movie || (!movie.title && !movie.original_title)) {
+        return; 
+      }
 
       // Création de l'objet correspondant à l'entité Movie
       const newMovie = movieRepository.create({
-        name: movie.title,
+        name: movie.title || movie.original_title, // Suppression du "Titre inconnu" devenu inutile
         date: movie.release_date || "Date inconnue",
         image: movie.poster_path,
         synopsis: movie.overview || "Aucun résumé disponible.",
@@ -87,9 +114,16 @@ appDataSource.initialize()
         duration: movie.runtime || 0,
         budget: movie.budget || 0,
         tagline: movie.tagline || "",
-        original_language: movie.original_language
+        original_language: movie.original_language,
+        director: movie.director,
+        actors: movie.actors,
+        keywords: movie.keywords,
+        trailer_key: movie.trailer_key,
+        revenue: movie.revenue || 0,
+        status: movie.status || "Inconnu",
+        homepage: movie.homepage || "",
+        genres: movie.genres ? movie.genres.map(g => g.name).join(', ') : "Inconnu"
       });
-
       insertRequests.push(
         movieRepository.insert(newMovie)
       );

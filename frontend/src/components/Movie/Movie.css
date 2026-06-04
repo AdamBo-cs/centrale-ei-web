@@ -7,20 +7,51 @@
   box-sizing: border-box;
   vertical-align: top; 
 
-  border: 1px solid #282c34;
+  border: 1px solid var(--ink);
   border-radius: 8px;
-  background-color:#282c34;
-  overflow: hidden;
+  background-color: var(--paper-dark);
+  box-shadow: 0 10px 10px rgba(0,0,0,0.25);
+  overflow: visible;
+  
+  position: relative;
+}
+
+.movie-card::before {
+  content: "";
+
+  position: absolute;
+
+  top: -10px;
+  align-self: center;
+  
+  width: 70px;
+  height: 20px;
+
+  background: rgba(255,255,255,0.7);
+
+  border: 1px solid rgba(0,0,0,0.05);
+
+  transform: rotate(-5deg);
+
+  z-index: 10;
 }
 
 .movie-title {
-  color: white; 
+  color: var(--ink); 
   margin: 0 0 4px 0;
   font-size: 1.1rem;
 }
 
 .movie-date {
-  color: white; 
+  color: var(--ink); 
   margin: 0;
   font-size: 0.9rem;
+}
+
+.movie-infos {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: var(--ink)
 }

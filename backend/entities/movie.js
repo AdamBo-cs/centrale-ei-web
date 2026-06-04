@@ -47,6 +47,38 @@ const Movie = new typeorm.EntitySchema({
       type: 'varchar',
       nullable: true, // Pour la langue d'origine (ex: 'en', 'fr')
     },
+    director: {
+      type: 'varchar',
+      nullable: true,
+    },
+    actors: {
+      type: 'varchar',
+      nullable: true,
+    },
+    keywords: {
+      type: 'text',
+      nullable: true,
+    },
+    trailer_key: {
+      type: 'varchar',
+      nullable: true, // Stockera l'ID YouTube (ex: "dQw4w9WgXcQ")
+    },
+    revenue: {
+      type: 'bigint',
+      nullable: true,
+    },
+    status: {
+      type: 'varchar',
+      nullable: true,
+    },
+    homepage: {
+      type: 'varchar',
+      nullable: true,
+    },
+    genres: {
+      type: 'varchar',
+      nullable: true,
+    },
   },
 });
 

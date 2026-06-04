@@ -1,14 +1,72 @@
 import React, { useState } from 'react';
 import './Home.css';
+import { Link } from 'react-router-dom';
 import { UseFetchMovies } from './UseFetchMovies';
-import Movie from '../../components/Movie/Movie'; // Ajuste le chemin si nécessaire
+import Movie from '../../components/Movie/Movie';
+import FilterPanel from '../../components/FilterPanel/FilterPanel';
+import { sortMovies } from '../../utils/sortMovies';
+import { extractGenres } from '../../utils/extractGenres';
+import { extractLanguages } from '../../utils/extractLanguages';
+import {
+  filterMoviesByDuration,
+  filterMoviesByGenres,
+  filterMoviesByLanguages,
+  filterMoviesByRating,
+} from '../../utils/filterMovies';
+import { countGenres } from '../../utils/countGenres';
 
 function Home() {
+  const [selectedGenres, setSelectedGenres] = useState([]);
+  const [sortBy, setSortBy] = useState('rating');
   const [movieName, setMovieName] = useState('');
-  const movies = UseFetchMovies();
-  const filtered_movies = movies.filter((movie) => {
-    return movie.title.toLowerCase().includes(movieName.toLowerCase());
+  const [visibleMovies, setVisibleMovies] = useState(100);
+  const [durationFilters, setDurationFilters] = useState({
+    short: false,
+    medium: false,
+    long: false,
   });
+  const [minRating, setMinRating] = useState(0);
+  const [genreMode, setGenreMode] = useState('OR');
+  const [selectedLanguages, setSelectedLanguages] = useState([]);
+
+  const movies = UseFetchMovies();
+
+  const genres = extractGenres(movies);
+
+  const genreCounts = countGenres(movies);
+
+  const languages = extractLanguages(movies);
+  console.log('Languages:', languages);
+
+  const filtered_movies = movies.filter((movie) => {
+    return (movie.name || '').toLowerCase().includes(movieName.toLowerCase());
+  });
+
+  const ratingFilteredMovies = filterMoviesByRating(filtered_movies, minRating);
+
+  const durationFilteredMovies = filterMoviesByDuration(
+    ratingFilteredMovies,
+    durationFilters
+  );
+
+  const genreFilteredMovies = filterMoviesByGenres(
+    durationFilteredMovies,
+    selectedGenres,
+    genreMode
+  );
+
+  const languageFilteredMovies = filterMoviesByLanguages(
+    genreFilteredMovies,
+    selectedLanguages
+  );
+
+  const sortedMovies = sortMovies(languageFilteredMovies, sortBy);
+
+  const activeFiltersCount =
+    Object.values(durationFilters).filter(Boolean).length +
+    (minRating > 0 ? 1 : 0) +
+    selectedGenres.length +
+    selectedLanguages.length;
 
   return (
     <div className="App">
@@ -24,13 +82,60 @@ function Home() {
           onChange={(e) => setMovieName(e.target.value)}
         />
       </div>
+
+      <div className="controls-container">
+        <select
+          className="select-style"
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+        >
+          <option value="name">Ordre alphabétique</option>
+
+          <option value="date-desc">Date (plus récent)</option>
+
+          <option value="date-asc">Date (plus ancien)</option>
+
+          <option value="rating-desc">Le plus populaire</option>
+
+          <option value="rating-asc">Le moins populaire</option>
+        </select>
+
+        <FilterPanel
+          durationFilters={durationFilters}
+          setDurationFilters={setDurationFilters}
+          minRating={minRating}
+          setMinRating={setMinRating}
+          genres={genres}
+          selectedGenres={selectedGenres}
+          setSelectedGenres={setSelectedGenres}
+          genreMode={genreMode}
+          setGenreMode={setGenreMode}
+          languages={languages}
+          selectedLanguages={selectedLanguages}
+          setSelectedLanguages={setSelectedLanguages}
+          activeFiltersCount={activeFiltersCount}
+          genreCounts={genreCounts}
+        />
+      </div>
+
       <p>{movieName}</p>
-      <h2>Films </h2>
       <div className="movies-grid">
-        {filtered_movies.map((singleMovie) => (
-          <Movie key={singleMovie.id} movie={singleMovie} />
+        {sortedMovies.slice(0, visibleMovies).map((singleMovie, index) => (
+          <Link
+            to={`/movies/${singleMovie.id}`}
+            key={singleMovie.id}
+            className="movie-grid-item"
+          >
+            <Movie movie={singleMovie} rank={index + 1} />
+          </Link>
         ))}
       </div>
+
+      {visibleMovies < sortedMovies.length && (
+        <button onClick={() => setVisibleMovies(visibleMovies + 20)}>
+          Charger plus
+        </button>
+      )}
     </div>
   );
 }

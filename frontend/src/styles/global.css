@@ -1,0 +1,17 @@
+.btn,
+.select-style {
+  background: #fffdf8;
+
+  border: 1px solid var(--accent-light);
+
+  box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+
+  border-radius: 8px;
+
+  font-family: "Special Elite", sans-serif;
+}
+
+.btn:hover,
+.select-style:hover {
+  background: var(--paper-dark);
+}
