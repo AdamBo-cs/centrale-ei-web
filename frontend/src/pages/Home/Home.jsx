@@ -6,10 +6,12 @@ import Movie from '../../components/Movie/Movie';
 import FilterPanel from '../../components/FilterPanel/FilterPanel';
 import { sortMovies } from '../../utils/sortMovies';
 import { extractGenres } from '../../utils/extractGenres';
+import { extractLanguages }  from '../../utils/extractLanguages';
 import {
   filterMoviesByGenres,
   filterMoviesByRating,
   filterMoviesByDuration,
+  filterMoviesByLanguages,
 } from '../../utils/filterMovies';
 
 function Home() {
@@ -24,12 +26,15 @@ function Home() {
     long: false,
   });
   const [minRating, setMinRating] = useState(0);
-
   const [genreMode, setGenreMode] = useState('OR');
+  const [selectedLanguages, setSelectedLanguages] = useState([]);
 
   const movies = UseFetchMovies();
   
   const genres = extractGenres(movies);
+
+  const languages =  extractLanguages(movies);
+  console.log("Languages:", languages);
 
   const filtered_movies = movies.filter((movie) => {
     return (movie.name || '')
@@ -55,9 +60,15 @@ function Home() {
       selectedGenres,
       genreMode
     );
+  
+  const languageFilteredMovies =
+    filterMoviesByLanguages(
+      genreFilteredMovies,
+      selectedLanguages
+    );
 
   const sortedMovies = sortMovies(
-    genreFilteredMovies,
+    languageFilteredMovies,
     sortBy
   );
 
@@ -111,6 +122,9 @@ function Home() {
           setSelectedGenres={setSelectedGenres}
           genreMode={genreMode}
           setGenreMode={setGenreMode}
+          languages={languages}
+          selectedLanguages={selectedLanguages}
+          setSelectedLanguages={setSelectedLanguages}
         />
     </div>
 

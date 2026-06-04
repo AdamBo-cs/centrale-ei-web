@@ -63,3 +63,18 @@ export function filterMoviesByGenres(
     );
   });
 }
+
+export function filterMoviesByLanguages(
+  movies,
+  selectedLanguages
+) {
+  if (selectedLanguages.length === 0) {
+    return movies;
+  }
+
+  return movies.filter((movie) =>
+    selectedLanguages.includes(
+      movie.original_language
+    )
+  );
+}

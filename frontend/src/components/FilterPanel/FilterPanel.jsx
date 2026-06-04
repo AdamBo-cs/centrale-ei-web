@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import './FilterPanel.css';
+import { languageNames } from '../../utils/languageNames';
 
 function FilterPanel({
   durationFilters,
@@ -14,6 +15,10 @@ function FilterPanel({
   
   genreMode,
   setGenreMode,
+
+  languages,
+  selectedLanguages,
+  setSelectedLanguages,
 }) {
   const [showFilters, setShowFilters] = useState(false);
   
@@ -42,6 +47,9 @@ function FilterPanel({
                 });
 
                 setSelectedGenres([]);
+                setGenreMode('OR');
+
+                setSelectedLanguages([]);
               }}
             >
               Réinitialiser les filtres
@@ -191,8 +199,36 @@ function FilterPanel({
                 </label>
               ))}
             </div>
-          </div>
 
+          <div className="filter-section">
+            <h4>Langue originale</h4>
+              <div className="languages-grid">
+                {(languages || []).map((language) => (
+                  <label key={language}>
+                    <input
+                      type="checkbox"
+                      checked={selectedLanguages.includes(language)}
+                      onChange={() => {
+                        if (selectedLanguages.includes(language)) {
+                          setSelectedLanguages(
+                            selectedLanguages.filter(
+                              (l) => l !== language
+                            )
+                          );
+                        } else {
+                          setSelectedLanguages([
+                            ...selectedLanguages,
+                            language,
+                          ]);
+                        }
+                      }}
+                    />
+                    {languageNames[language] || language}
+                  </label>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>
