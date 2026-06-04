@@ -1,16 +1,96 @@
-.Header-container {
+/* Barre de navigation principale assortie à Home.css */
+.header-container {
   display: flex;
-  flex-direction: row;
-  justify-content: center;
-  padding: 5px;
-  font-size: calc(10px + 2vmin);
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--paper-dark, #f5f5f5); /* Utilise la même couleur que ton App-header */
+  padding: 16px 40px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  font-family: 'Manrope', -apple-system, sans-serif; /* Raccord avec ta police principale */
+  color: var(--ink, #222);
 }
 
-.Header-container > :not(:last-child) {
-  margin-right: 10px;
+/* Alignement des listes de liens */
+.header-nav-links {
+  display: flex;
+  gap: 24px;
+  align-items: center;
 }
 
-.Link {
-  font-weight: 700;
-  color: white;
+/* Style de base de tous les liens */
+.header-container .link {
+  color: var(--ink, #444);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 16px;
+  transition: transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.2s;
+}
+
+.header-container .link:hover {
+  opacity: 0.7;
+  transform: translateY(-2px); /* Petit rappel discret du hover de tes films */
+}
+
+/* Style spécifique du logo / titre de l'application */
+.logo-text {
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  color: var(--ink, #111) !important;
+  letter-spacing: 1px;
+}
+
+/* Zone Utilisateur Connecté / Boutons */
+.header-auth-zone {
+  display: flex;
+  align-items: center;
+}
+
+.user-logged-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.user-welcome {
+  color: var(--ink, #222);
+  font-weight: 600;
+  font-size: 15px;
+}
+
+/* Style des boutons d'action (Déconnexion) */
+.btn-logout {
+  background-color: transparent;
+  color: var(--ink, #222);
+  border: 1px solid var(--ink, #222);
+  padding: 8px 16px;
+  border-radius: 4px; /* Un peu plus carré/brut pour coller au style paper/ink */
+  cursor: pointer;
+  font-weight: 600;
+  font-family: 'Manrope', sans-serif;
+  transition: all 0.2s ease;
+}
+
+.btn-logout:hover {
+  background-color: var(--ink, #222);
+  color: var(--paper, #fff);
+}
+
+.auth-links-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Bouton s'inscrire */
+.btn-register {
+  background-color: var(--ink, #222) !important;
+  color: var(--paper, #fff) !important;
+  padding: 8px 18px;
+  border-radius: 4px;
+  font-weight: 600 !important;
+}
+
+.btn-register:hover {
+  opacity: 0.85;
+  transform: translateY(-2px);
 }
