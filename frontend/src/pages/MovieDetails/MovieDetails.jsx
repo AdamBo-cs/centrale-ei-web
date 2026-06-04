@@ -136,7 +136,10 @@ const MovieDetails = () => {
               {movieDetails.budget ? `${movieDetails.budget} $` : 'N/A'}
             </div>
           </div>
-
+          <h3>Genres</h3>
+          <p className="movie-details-synopsis">
+            {movieDetails.genres || 'Aucun genre disponible pour ce film.'}
+          </p>
           <h3>Synopsis</h3>
           <p className="movie-details-synopsis">
             {movieDetails.synopsis || 'Aucun synopsis disponible pour ce film.'}

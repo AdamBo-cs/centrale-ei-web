@@ -6,18 +6,17 @@ import Movie from '../../components/Movie/Movie';
 import FilterPanel from '../../components/FilterPanel/FilterPanel';
 import { sortMovies } from '../../utils/sortMovies';
 import { extractGenres } from '../../utils/extractGenres';
-import { extractLanguages }  from '../../utils/extractLanguages';
+import { extractLanguages } from '../../utils/extractLanguages';
 import {
-  filterMoviesByGenres,
-  filterMoviesByRating,
   filterMoviesByDuration,
+  filterMoviesByGenres,
   filterMoviesByLanguages,
+  filterMoviesByRating,
 } from '../../utils/filterMovies';
 import { countGenres } from '../../utils/countGenres';
 
 function Home() {
-  const [selectedGenres, setSelectedGenres] =
-  useState([]);  
+  const [selectedGenres, setSelectedGenres] = useState([]);
   const [sortBy, setSortBy] = useState('rating');
   const [movieName, setMovieName] = useState('');
   const [visibleMovies, setVisibleMovies] = useState(100);
@@ -31,55 +30,43 @@ function Home() {
   const [selectedLanguages, setSelectedLanguages] = useState([]);
 
   const movies = UseFetchMovies();
-  
+
   const genres = extractGenres(movies);
 
   const genreCounts = countGenres(movies);
 
-  const languages =  extractLanguages(movies);
-  console.log("Languages:", languages);
+  const languages = extractLanguages(movies);
+  console.log('Languages:', languages);
 
   const filtered_movies = movies.filter((movie) => {
-    return (movie.name || '')
-      .toLowerCase()
-      .includes(movieName.toLowerCase());
+    return (movie.name || '').toLowerCase().includes(movieName.toLowerCase());
   });
 
-  const ratingFilteredMovies =
-    filterMoviesByRating(
-      filtered_movies,
-      minRating
-    );
+  const ratingFilteredMovies = filterMoviesByRating(filtered_movies, minRating);
 
-  const durationFilteredMovies =
-    filterMoviesByDuration(
-      ratingFilteredMovies,
-      durationFilters
-    );
-
-  const genreFilteredMovies =
-    filterMoviesByGenres(
-      durationFilteredMovies,
-      selectedGenres,
-      genreMode
-    );
-  
-  const languageFilteredMovies =
-    filterMoviesByLanguages(
-      genreFilteredMovies,
-      selectedLanguages
-    );
-
-  const sortedMovies = sortMovies(
-    languageFilteredMovies,
-    sortBy
+  const durationFilteredMovies = filterMoviesByDuration(
+    ratingFilteredMovies,
+    durationFilters
   );
 
+  const genreFilteredMovies = filterMoviesByGenres(
+    durationFilteredMovies,
+    selectedGenres,
+    genreMode
+  );
+
+  const languageFilteredMovies = filterMoviesByLanguages(
+    genreFilteredMovies,
+    selectedLanguages
+  );
+
+  const sortedMovies = sortMovies(languageFilteredMovies, sortBy);
+
   const activeFiltersCount =
-    Object.values(durationFilters).filter(Boolean).length
-    + (minRating > 0 ? 1 : 0)
-    + selectedGenres.length
-    + selectedLanguages.length;
+    Object.values(durationFilters).filter(Boolean).length +
+    (minRating > 0 ? 1 : 0) +
+    selectedGenres.length +
+    selectedLanguages.length;
 
   return (
     <div className="App">
@@ -97,29 +84,20 @@ function Home() {
       </div>
 
       <div className="controls-container">
-
         <select
           className="select-style"
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value)}
-        >          
+        >
           <option value="name">Ordre alphabétique</option>
 
-          <option value="date-desc">
-            Date (plus récent)
-          </option>
+          <option value="date-desc">Date (plus récent)</option>
 
-          <option value="date-asc">
-            Date (plus ancien)
-          </option>
+          <option value="date-asc">Date (plus ancien)</option>
 
-          <option value="rating-desc">
-            Le plus populaire
-          </option>
+          <option value="rating-desc">Le plus populaire</option>
 
-          <option value="rating-asc">
-            Le moins populaire
-          </option>
+          <option value="rating-asc">Le moins populaire</option>
         </select>
 
         <FilterPanel
@@ -138,30 +116,23 @@ function Home() {
           activeFiltersCount={activeFiltersCount}
           genreCounts={genreCounts}
         />
-    </div>
+      </div>
 
       <p>{movieName}</p>
       <div className="movies-grid">
-        {sortedMovies
-          .slice(0, visibleMovies)
-          .map((singleMovie, index) => (
-            <Link 
-              to={`/movies/${singleMovie.id}`} 
-              key={singleMovie.id} 
-              style={{ textDecoration: 'none', color: 'inherit' }}
-            >
-              <Movie
-                movie={singleMovie}
-                rank={index + 1}
-              />
-            </Link>
+        {sortedMovies.slice(0, visibleMovies).map((singleMovie, index) => (
+          <Link
+            to={`/movies/${singleMovie.id}`}
+            key={singleMovie.id}
+            className="movie-grid-item"
+          >
+            <Movie movie={singleMovie} rank={index + 1} />
+          </Link>
         ))}
       </div>
 
       {visibleMovies < sortedMovies.length && (
-        <button
-          onClick={() => setVisibleMovies(visibleMovies + 20)}
-        >
+        <button onClick={() => setVisibleMovies(visibleMovies + 20)}>
           Charger plus
         </button>
       )}

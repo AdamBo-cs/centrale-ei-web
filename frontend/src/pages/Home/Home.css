@@ -58,3 +58,39 @@
   justify-content: space-between;
   margin: 20px 40px;
 }
+
+.movies-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+  margin: 20px 40px;
+}
+
+/* 1. On prépare le lien pour une transition fluide */
+.movies-grid > a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  /* Transition uniquement sur le mouvement (transform) */
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* L'effet de mouvement seul au survol */
+.movies-grid > a:hover {
+  transform: translateY(-8px) scale(1.03);
+  cursor: pointer;
+}
+/* Force le lien et le composant Movie à prendre les 100% de la colonne de la grille */
+.movies-grid > a,
+.movies-grid > a > div {
+  width: 100% !important;
+  max-width: none !important;
+}
+
+/* Force l'image de l'affiche à s'adapter proprement à la largeur de sa colonne */
+.movies-grid > a img {
+  width: 100% !important;
+  height: auto !important;
+  max-width: none !important;
+  object-fit: cover;
+}
