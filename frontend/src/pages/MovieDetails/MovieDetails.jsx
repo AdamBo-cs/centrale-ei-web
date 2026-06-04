@@ -149,4 +149,3 @@ const MovieDetails = () => {
 };
 
 export default MovieDetails;
-# th
