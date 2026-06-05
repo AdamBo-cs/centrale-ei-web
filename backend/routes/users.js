@@ -6,6 +6,7 @@ import Rating from '../entities/rating.js';
 import { Movie } from '../entities/movie.js';
 import { updateUserProfileVector } from '../services/reco_profile_service.js';
 import { getUserPythonRecommendations } from '../services/reco_service.js';
+import { getDuoPythonRecommendations } from '../services/duo_reco_service.js'; // Regroupement de l'import ici
 
 const router = express.Router();
 
@@ -115,25 +116,23 @@ router.get('/:userId/profile', function (req, res) {
       if (!user) {
         res.status(404).json({ message: 'Utilisateur introuvable' });
 
-        return null; // On coupe la chaîne de Promises ici
+        return null;
       }
 
       const { password, ...safeUser } = user;
 
-      // Si privé et pas le propriétaire : on bloque les données
       if (!user.isPublic && userId !== viewerId) {
         res.json({ user: safeUser, ratings: [], isPrivateAccess: true });
 
         return null;
       }
 
-      // Si tout est bon, on passe l'utilisateur au bloc .then() suivant pour chercher les notes
       return safeUser;
     })
     .then(function (safeUser) {
       if (!safeUser) {
         return;
-      } // Si on a déjà répondu (404 ou privé), on s'arrête
+      }
 
       return ratingRepository
         .findBy({ userId: userId })
@@ -144,14 +143,13 @@ router.get('/:userId/profile', function (req, res) {
             return null;
           }
 
-          // On transmet les notes et les infos utilisateur à l'étape suivante
           return { safeUser, ratings };
         });
     })
     .then(function (context) {
       if (!context) {
         return;
-      } // Arrêt si déjà traité
+      }
 
       const { safeUser, ratings } = context;
       const movieIds = ratings.map((r) => r.movieId);
@@ -240,7 +238,6 @@ router.post('/:userId/ratings', function (req, res) {
       }
     })
     .then(function (savedRating) {
-      // AJOUT MAGIQUE : Lancement instantané du recalcul du vecteur profil (qui renvoie une Promise)
       return updateUserProfileVector(userId, appDataSource).then(function () {
         res.status(200).json({
           message: 'Note enregistrée et profil mis à jour !',
@@ -293,12 +290,11 @@ router.delete('/:userId', function (req, res) {
     });
 });
 
-// Dans ton fichier de routes Express
+// 9. Récupérer les recommandations individuelles
 router.get('/:userId/recommendations', function (req, res) {
   const userId = parseInt(req.params.userId, 10);
   const movieRepository = appDataSource.getRepository(Movie);
 
-  // 1. Récupération des 5 IDs triés par Python
   getUserPythonRecommendations(userId)
     .then(function (recommendedIds) {
       if (!recommendedIds || recommendedIds.length === 0) {
@@ -307,20 +303,18 @@ router.get('/:userId/recommendations', function (req, res) {
         return null;
       }
 
-      // 2. Extraction depuis la BDD (attention, SQLite va casser l'ordre ici)
       return movieRepository
         .find({
           where: { id: In(recommendedIds) },
         })
         .then(function (movies) {
-          // 3. LA CORRECTION : On force les films à se remettre dans l'ordre exact de la liste recommendedIds
           const orderedMovies = recommendedIds
             .map(function (id) {
               return movies.find(function (movie) {
                 return Number(movie.id) === Number(id);
               });
             })
-            .filter(Boolean); // Sécurité pour éliminer les éventuels films introuvables
+            .filter(Boolean);
 
           return orderedMovies;
         });
@@ -329,7 +323,6 @@ router.get('/:userId/recommendations', function (req, res) {
       if (!orderedRecommendations) {
         return;
       }
-      // Envoi du tableau correctement ordonné au frontend
       res.json({ recommendations: orderedRecommendations });
     })
     .catch(function (error) {
@@ -339,4 +332,73 @@ router.get('/:userId/recommendations', function (req, res) {
         .json({ message: 'Erreur lors du calcul des recommandations' });
     });
 });
+
+// =====================================================================
+// 10. Récupérer la liste des autres utilisateurs pour le menu déroulant Duo
+// =====================================================================
+router.get('/:currentUserId/list', function (req, res) {
+  const currentUserId = parseInt(req.params.currentUserId, 10);
+
+  appDataSource
+    .getRepository(User)
+    .find() // <-- CORRECTION : Aucun select, aucune option. On prend tout pour éviter les bugs TypeORM.
+    .then((users) => {
+      // ÉTAPE 1 : Si la table est vide ou s'il y a un problème
+      if (!users || !Array.isArray(users)) {
+        return res.json([]);
+      }
+
+      // ÉTAPE 2 : On filtre et nettoie les données directement en Javascript
+      const filteredUsers = users
+        .filter(function (user) {
+          // On retire l'utilisateur connecté
+          return Number(user.id) !== Number(currentUserId);
+        })
+        .map(function (user) {
+          // On ne garde QUE les infos nécessaires pour le menu déroulant (sécurité)
+          return {
+            id: user.id,
+            firstname: user.firstname,
+            lastname: user.lastname,
+          };
+        });
+
+      // ÉTAPE 3 : On renvoie le résultat propre
+      res.json(filteredUsers);
+    })
+    .catch((err) => {
+      console.error('Erreur BDD Liste Duo Directe :', err);
+      res
+        .status(500)
+        .json({ message: 'Erreur lors de la récupération de la liste' });
+    });
+});
+
+// 11. Récupérer les recommandations de films Duo
+router.get('/recommendations/duo', function (req, res) {
+  const user1Id = parseInt(req.query.user1, 10);
+  const user2Id = parseInt(req.query.user2, 10);
+  const movieRepository = appDataSource.getRepository(Movie);
+
+  getDuoPythonRecommendations(user1Id, user2Id)
+    .then((recommendedIds) => {
+      if (!recommendedIds || recommendedIds.length === 0) {
+        return [];
+      }
+
+      return movieRepository
+        .find({ where: { id: In(recommendedIds) } })
+        .then((movies) => {
+          return recommendedIds
+            .map((id) => movies.find((m) => Number(m.id) === Number(id)))
+            .filter(Boolean);
+        });
+    })
+    .then((orderedMovies) => res.json({ recommendations: orderedMovies }))
+    .catch((err) => {
+      console.error(err);
+      res.status(500).json({ message: 'Erreur lors du calcul duo' });
+    });
+});
+
 export default router;

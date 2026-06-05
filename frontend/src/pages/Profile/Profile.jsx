@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import './profile.css';
+import './profile.css';
+import ProfileDuoRecommendations from './ProfileDuoReco';
 
 const Profile = () => {
   const { currentUser, logout } = useAuth();
@@ -98,7 +100,7 @@ const Profile = () => {
       {/* SECTION DES RECOMMANDATIONS PERSONNALISÉES (Nouveau) */}
       <section className="profile-recommendations-section">
         <div className="profile-section-title-container">
-          <h2>Recommandé pour vous ✨</h2>
+          <h2>Recommandé pour vous</h2>
           <p className="profile-subtitle">
             Basé sur vos goûts cinématographiques
           </p>
@@ -192,14 +194,11 @@ const Profile = () => {
           /* VUE 2 : TOUS LES FILMS (Vue compacte) */
           <div className="profile-section-wrapper">
             <div className="profile-section-title-container">
-              <h2>Tous mes films notés ({ratedMovies.length})</h2>
-              <button
-                className="profile-toggle-btn secondary"
-                onClick={() => setShowAll(false)}
-              >
-                Retour à la vue réduite
-              </button>
-            </div>
+                <h2>Films notés récemment</h2>
+                 <button className="profile-toggle-btn" onClick={() => setShowAll(true)}>
+                 Voir tout ({ratedMovies.length})
+                </button>
+                </div>
 
             <div className="profile-movies-grid compact">
               {ratedMovies.map((movie) => (
@@ -229,6 +228,11 @@ const Profile = () => {
           </div>
         )}
       </section>
+      <hr className="profile-separator" />
+      <ProfileDuoRecommendations
+        currentUserId={currentUser.id}
+        getPosterUrl={getPosterUrl}
+      />
     </main>
   );
 };
