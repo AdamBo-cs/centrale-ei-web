@@ -2,7 +2,10 @@ import { useEffect, useState } from "react";
 import "./ScrollToTopButton.css";
 
 const ScrollToTopButton = () => {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(false);/* 
+  const container = document.querySelector('.App');
+
+  container.addEventListener('scroll', handleScroll); */
 
   useEffect(() => {
     const handleScroll = () => {
@@ -23,11 +26,9 @@ const ScrollToTopButton = () => {
     });
   };
 
-  if (!visible) return null;
-
   return (
     <button
-      className="scroll-top-button"
+      className={`scroll-top-button ${visible ? "visible" : ""}`}
       onClick={scrollToTop}
     >
       ↑

@@ -1,8 +1,6 @@
 .scroll-top-button {
   position: fixed;
 
-  opacity: 0;
-
   bottom: 10px;
   right: 10px;
 
@@ -10,6 +8,7 @@
   height: 40px;
 
   border-radius: 50%;
+
   border: 3px solid var(--ink);
 
   background: var(--paper);
@@ -24,23 +23,21 @@
 
   z-index: 9999;
 
-  transition: 
-    transform 0.2s ease,
-    opacity 0.2s ease;  
-}
+  opacity: 0;
+  pointer-events: none;
 
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
 
 .scroll-top-button.visible {
-    opacity: 0.15;
-    pointer-events: auto;
+  opacity: 0.15;
+  pointer-events: auto;
 }
 
-body:hover .scroll-top-button {
-    opacity: 1;
-}
-
-.scroll-top-button:hover {
-    opacity: 1;
-    transform: translateY(-3px);
-    background: var(--paper-dark);
+.scroll-top-button.visible:hover {
+  opacity: 1;
+  transform: translateY(-3px);
+  background: var(--paper-dark);
 }

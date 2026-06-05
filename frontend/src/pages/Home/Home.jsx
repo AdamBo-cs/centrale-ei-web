@@ -15,6 +15,7 @@ import {
 } from '../../utils/filterMovies';
 import { countGenres } from '../../utils/countGenres';
 import { useAuth } from '../../context/AuthContext';
+import ScrollToTopButton from '../../components/ScrollToTopButton/ScrollToTopButton';
 
 function Home() {
   const { currentUser } = useAuth();
@@ -71,6 +72,8 @@ function Home() {
     selectedLanguages.length;
 
   return (
+    <>
+    <ScrollToTopButton/>
     <div className="home-scrapbook-container">
       {/* Le nouvel en-tête style Scrapbook */}
       <header className="home-header-scrapbook">
@@ -187,7 +190,9 @@ function Home() {
         </button>
       )}
     </div>
+    </>
   );
 }
+
 
 export default Home;
