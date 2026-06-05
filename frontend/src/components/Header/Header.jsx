@@ -53,8 +53,6 @@ const Header = () => {
       {/* Navigation principale */}
       <div className="header-nav-links">
         <Link className="link" to="/">Accueil</Link>
-        <Link className="link" to="/counter">Compteur</Link>
-        <Link className="link" to="/users">Utilisateurs</Link>
         <Link className="link" to="/about">À propos</Link>
         {currentUser && <Link className="link" to="/profile">Mon Profil</Link>}
       </div>
