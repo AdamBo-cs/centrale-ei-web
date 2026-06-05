@@ -12,14 +12,17 @@
 }
 
 .filter-panel {
-  position: absolute;
-  right: 40px;
+  position: fixed;
+  right: 0;
+  top: 10px;
+  overflow-y: auto;
+
+  max-height: calc(100vh - 40px);
 
   display: flex;
   flex-direction: column;
-  gap: 10px;
 
-  padding: 15px;
+  padding: 10px;
 
   border: 1px solid var(--accent-light);
   border-radius: 8px;
@@ -32,6 +35,17 @@
   z-index: 9999;
   
   color: var(--ink);
+  font-family: "Special Elite";
+  font-size: 0.9rem;
+
+  width: fit-content;
+  max-width: 300px;
+}
+
+.filter-panel label,
+.filter-panel span,
+.filter-panel button {
+  font-size: 0.8rem;
 }
 
 .filter-panel label {
@@ -39,16 +53,40 @@
   text-align: left;
 }
 
+.filter-row {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+}
+
+.filter-row .filter-section {
+  flex: 1;
+  gap:10px;
+}
+
+.filters-top {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+}
+
+.rating-section {
+  min-width: 120px;
+}
+
+.duration-section {
+  min-width: 20px;
+}
+
 .genres-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 8px 24px;
 }
 
 .genre-tag {
   display: inline-block;
-  padding: 6px 12px;
-  margin: 4px;
+  padding: 3px 3px;
+  margin: 1px;
 
   border: 1px solid var(--accent);
   border-radius: 6px;
@@ -58,6 +96,10 @@
   cursor: pointer;
 
   transition: all 0.2s ease;
+
+  font-size: 0.8rem;
+
+  width: fit-content;
 }
 
 .genre-tag:hover {
@@ -140,13 +182,7 @@
   margin-bottom: 15px;
 }
 
-.reset-filters-btn {
-  display: block;
-  margin-left: auto;
-}
-
 .languages-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 8px 24px;
 }

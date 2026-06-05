@@ -41,7 +41,7 @@ function FilterPanel({
 
           <div className="reset-container">  
             <button
-              className="reset-filters-btn"
+              className="btn"
               onClick={() => {
                 setMinRating(0);
 
@@ -60,7 +60,9 @@ function FilterPanel({
               Réinitialiser les filtres
             </button>
           </div>
-
+          
+          <div className="filter-row">
+            <div className="rating-section">
             <h4>Note minimale</h4>
               <label>
                 <input
@@ -101,7 +103,9 @@ function FilterPanel({
                 />
                 ★★★★☆ (4+)
               </label>
-
+            </div>
+            
+            <div className="duration-section">
             <h4>Durée</h4>
             <label>
               <input
@@ -144,8 +148,9 @@ function FilterPanel({
               />
               &gt; 2h
             </label>
+            </div>
           </div>
-
+        </div>
           <div className="filter-section">
             <h4>Genres</h4>
             <div className="genre-mode-container">

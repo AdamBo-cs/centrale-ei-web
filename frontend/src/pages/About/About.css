@@ -1,3 +1,122 @@
-.about {
-  text-align: center;
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rubik+Dirt&display=swap');
+
+:root {
+  --postit-yellow: #f4e28a;
+  --postit-pink: #efc7c7;
+  --postit-blue: #cfdceb;
+  --postit-green: #d9e5c1;
+}
+
+.about-page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  background: var(--paper);
+  min-height: 100vh;
+}
+
+.postit.blue {
+  width: 300px;
+  min-height: 260px;
+
+  padding: 15px;
+
+  background: var(--postit-blue);
+
+  color: var(--ink);
+
+  box-shadow:
+    0 8px 18px rgba(0,0,0,0.15);
+
+  position: relative;
+  font-family: "Special Elite", sans-serif;
+}
+
+.postit.pink {
+  width: 300px;
+  min-height: 260px;
+
+  padding: 15px;
+
+  background: var(--postit-pink);
+
+  color: var(--ink);
+
+  box-shadow:
+    0 8px 18px rgba(0,0,0,0.15);
+
+  position: relative;
+
+  font-family: "Special Elite", sans-serif;
+}
+
+.postit.green {
+  width: 300px;
+  min-height: 260px;
+
+  padding: 15px;
+
+  background: var(--postit-green);
+
+  color: var(--ink);
+
+  box-shadow:
+    0 8px 18px rgba(0,0,0,0.15);
+
+  position: relative;
+    
+  font-family: "Special Elite", sans-serif;
+}
+
+.postit.yellow {
+  width: 300px;
+  min-height: 260px;
+
+  padding: 15px;
+
+  background: var(--postit-yellow);
+
+  color: var(--ink);
+
+  box-shadow:
+    0 8px 18px rgba(0,0,0,0.15);
+
+  position: relative;
+  
+  font-family: "Special Elite", sans-serif;
+}
+
+.postit h2 {
+  margin-top: 0;
+
+  font-size: 1.2rem;
+  margin-bottom: 16px;
+}
+
+.postit p,
+.postit li {
+  line-height: 1.5;
+}
+
+.postit:nth-child(2n) {
+  transform: rotate(-2deg);
+}
+
+.postit:nth-child(3n) {
+  transform: rotate(2deg);
+}
+
+.postit:nth-child(4n) {
+  transform: rotate(-1deg);
 }
