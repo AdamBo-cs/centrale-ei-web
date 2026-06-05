@@ -36,4 +36,40 @@ body,
 #root {
   min-height: 100vh;
   background: var(--paper);
+
+}
+
+:root {
+  /* La palette Scrapbook / Ciné Carnet (Noms uniques et sécurisés) */
+  --scrapbook-paper-bg: #f4ece1;         /* Beige papier de base */
+  --scrapbook-paper-dark: #e8dbce;       /* Beige un peu plus foncé */
+  --scrapbook-ink-black: #2b2b2b;        /* Noir d'encre */
+  --scrapbook-stamp-red: #b02a2a;        /* Rouge délavé pour les tampons/boutons */
+  --scrapbook-pen-blue: #1c3d72;         /* Bleu stylo bille */
+  --scrapbook-tape-color: rgba(240, 230, 140, 0.6); /* Couleur du scotch masking tape */
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Manrope', -apple-system, sans-serif;
+  color: var(--scrapbook-ink-black); /* Mise à jour ici aussi ! */
+  
+  /* L'effet Papier ! */
+  background-color: var(--scrapbook-paper-bg);
+  background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+  background-attachment: fixed;
+  background-size: auto;
+}
+
+h1, h2, h3 {
+  color: var(--scrapbook-ink-black); /* Et ici ! */
+}
+
+.font-handwritten {
+  font-family: 'Caveat', cursive;
+}
+
+.font-typewriter {
+  font-family: 'Special Elite', monospace;
 }
