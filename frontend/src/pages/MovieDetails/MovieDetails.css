@@ -1,113 +1,225 @@
-/* --- Conteneurs globaux --- */
+/* =========================================
+   MOVIE DETAILS - STYLE CARNET / SCRAPBOOK
+   ========================================= */
+
 .movie-details-main {
-  padding: 2rem;
-  max-width: 1200px;
+  max-width: 1000px;
   margin: 0 auto;
+  padding: 20px;
+  padding-bottom: 80px;
 }
 
-.movie-details-loading {
-  padding: 2rem;
-  font-size: 1.2rem;
-}
-
-.movie-details-error {
-  padding: 2rem;
-  color: #d32f2f;
-  font-weight: bold;
-}
-
-/* --- Bannière --- */
+/* --- La Bannière --- */
 .movie-details-banner {
   width: 100%;
-  height: 300px;
+  height: 300px;.movie-details-user-rating {
+  margin-bottom: 30px;
+  padding: 15px;
+  border: 2px solid var(--scrapbook-pen-blue);
+  
+  /* LA CORRECTION : Force le passage à la ligne mais garde la boîte petite */
+  display: block;
+  width: fit-content; 
+  
+  transform: rotate(1deg);
+  background-color: rgba(255, 255, 255, 0.5);
+}
   overflow: hidden;
-  border-radius: 8px;
-  margin-bottom: 2rem;
+  border-radius: 2px;
+  margin-bottom: 30px;
+  border: 1px solid var(--scrapbook-ink-black);
+  /* Petit effet vintage sur la bannière */
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.3); 
 }
 
 .movie-details-banner img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  /* On désature très légèrement pour le côté archive */
+  filter: sepia(0.1) contrast(1.05); 
 }
 
-/* --- En-tête (Titre et Slogan) --- */
+/* --- L'En-tête (Titre et Slogan) --- */
 .movie-details-header {
-  border-bottom: 1px solid #eee;
-  padding-bottom: 1rem;
-  margin-bottom: 2rem;
+  text-align: center;
+  margin-bottom: 40px;
+  border-bottom: 2px dashed var(--scrapbook-ink-black);
+  padding-bottom: 20px;
 }
 
 .movie-details-title {
-  font-size: 2.5rem;
-  margin: 0 0 0.5rem 0;
+  font-family: 'Special Elite', monospace;
+  font-size: 2.8rem;
+  color: var(--scrapbook-ink-black);
+  margin: 0 0 10px 0;
 }
 
 .movie-details-date {
-  color: #000000;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
+  color: var(--scrapbook-stamp-red);
 }
 
 .movie-details-tagline {
-  font-style: italic;
-  color: #000000;
+  font-family: 'Caveat', cursive;
+  font-size: 2.2rem;
+  color: var(--scrapbook-pen-blue);
+  margin: 0;
   font-weight: normal;
-  margin-top: 0;
 }
 
-/* --- Disposition principale (Affiche + Infos) --- */
+/* --- Le Contenu Principal (Affiche + Infos) --- */
 .movie-details-content {
   display: flex;
-  gap: 3rem;
-  flex-wrap: wrap; /* Permet de passer à la ligne sur les petits écrans */
+  gap: 50px;
+  align-items: flex-start; /* Empêche l'affiche de s'étirer en hauteur */
+  margin-bottom: 50px;
 }
 
-/* Colonne de gauche (Affiche) */
+/* --- L'Affiche (Style Polaroïd Fixe) --- */
 .movie-details-aside {
-  flex: 1 1 300px;
-  max-width: 350px;
+  width: 300px; /* LA FAMEUSE TAILLE FIXE */
+  flex-shrink: 0; /* Empêche le rétrécissement */
+  flex-grow: 0;   /* Empêche l'agrandissement */
+  
+  background: white;
+  padding: 12px 12px 20px 12px;
+  border: 1px solid #ddd;
+  box-shadow: 3px 5px 15px rgba(0,0,0,0.15);
+  transform: rotate(-2deg); /* Petite rotation */
+  position: relative;
+}
+
+/* Le bout de scotch sur l'affiche */
+.movie-details-aside::before {
+  content: "";
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%) rotate(4deg);
+  width: 80px;
+  height: 30px;
+  background-color: var(--scrapbook-tape-color);
+  z-index: 2;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .movie-details-poster {
   width: 100%;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  height: auto;
+  display: block;
+  border: 1px solid #eee;
 }
 
 .movie-details-poster-placeholder {
   width: 100%;
-  aspect-ratio: 2 / 3;
-  background-color: #f0f0f0;
+  aspect-ratio: 2/3;
+  background-color: var(--scrapbook-paper-dark);
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
-  color: #888;
+  color: var(--scrapbook-pen-blue);
+  font-family: 'Special Elite', monospace;
+  text-align: center;
 }
 
-/* Colonne de droite (Texte et Stats) */
+/* --- La Fiche Technique (Stats & Synopsis) --- */
 .movie-details-article {
-  flex: 2 1 500px;
+  flex-grow: 1;
 }
 
-/* Grille des statistiques (Note, Durée, Budget...) */
+/* Le bloc des statistiques style "Tampon" ou "Machine à écrire" */
 .movie-details-stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 1rem;
-  margin-bottom: 2rem;
-  background-color: #b88964;
-  padding: 1.5rem;
-  border-radius: 8px;
-}
-
-.movie-details-stats-grid div {
-  font-size: 1rem;
-}
-
-/* Paragraphe du Synopsis */
-.movie-details-synopsis {
-  line-height: 1.6;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  background-color: var(--scrapbook-paper-dark);
+  padding: 20px;
+  border-radius: 2px;
+  margin-bottom: 30px;
+  font-family: 'Special Elite', monospace;
   font-size: 1.1rem;
-  color: #000000;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+
+.movie-details-stats-grid strong {
+  color: var(--scrapbook-stamp-red);
+}
+
+/* La section pour noter le film */
+.movie-details-user-rating {
+  margin-bottom: 30px;
+  padding: 10px 20px; /* Un peu plus allongé sur les côtés */
+  border: 2px solid var(--scrapbook-pen-blue);
+  
+  /* L'ALIGNEMENT HORIZONTAL : Flexbox magique */
+  display: flex;
+  align-items: center; /* Centre verticalement le texte avec les étoiles */
+  gap: 15px; /* L'espace exact entre le texte et les étoiles */
+  width: fit-content; 
+  
+  transform: rotate(1deg);
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+/* On cible uniquement le h3 à l'intérieur de la boîte */
+.movie-details-user-rating h3 {
+  font-family: 'Caveat', cursive;
+  font-size: 1.8rem;
+  color: var(--scrapbook-pen-blue);
+  
+  /* LA CORRECTION : On enlève les marges et le trait en dessous */
+  margin: 0; 
+  border-bottom: none; 
+}
+
+/* Le Synopsis */
+.movie-details-article h3 {
+  font-family: 'Caveat', cursive;
+  font-size: 2.2rem;
+  margin-bottom: 15px;
+  color: var(--scrapbook-ink-black);
+  border-bottom: 2px solid var(--scrapbook-ink-black);
+  
+  /* LA CORRECTION : Pareil ici, on force un nouveau bloc indépendant */
+  display: block;
+  width: fit-content; /* Pour que le trait en dessous s'arrête à la fin du mot */
+  margin-top: 10px; /* Un petit espace de respiration avec la boîte du dessus */
+}
+
+.movie-details-synopsis {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  text-align: justify;
+}
+
+/* --- Ecrans de chargement et erreur --- */
+.movie-details-loading,
+.movie-details-error {
+  text-align: center;
+  margin-top: 100px;
+  font-family: 'Caveat', cursive;
+  font-size: 2.5rem;
+  color: var(--scrapbook-pen-blue);
+}
+
+.movie-details-error {
+  color: var(--scrapbook-stamp-red);
+}
+
+/* --- Responsive (Mobile) --- */
+@media (max-width: 768px) {
+  .movie-details-content {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .movie-details-aside {
+    transform: rotate(0deg); /* On remet droit sur mobile */
+    margin-bottom: 30px;
+  }
+  
+  .movie-details-stats-grid {
+    grid-template-columns: 1fr;
+  }
 }
