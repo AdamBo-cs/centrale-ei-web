@@ -20,6 +20,7 @@ const Layout = ({ children }) => {
           <Link to="/counter" className="nav-item">🔢 Compteur</Link>
           <Link to="/users" className="nav-item">👥 Utilisateurs</Link>
           <Link to="/about" className="nav-item">ℹ️ À propos</Link>
+          
           {currentUser ? (
             <>
               <Link to="/profile" className="nav-item">👤 Mon profil</Link>
@@ -28,7 +29,11 @@ const Layout = ({ children }) => {
               </button>
             </>
           ) : (
-            <Link to="/login" className="nav-item">🔑 Se connecter</Link>
+            <>
+              <Link to="/login" className="nav-item">🔑 Se connecter</Link>
+              {/* Le bouton d'inscription s'affiche ici uniquement si déconnecté */}
+              <Link to="/register" className="nav-item">📝 S'inscrire</Link>
+            </>
           )}
         </nav>
       </aside>
