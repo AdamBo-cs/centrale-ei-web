@@ -17,8 +17,6 @@ const Layout = ({ children }) => {
 
         <nav className="sidebar-nav">
           <Link to="/" className="nav-item">🏠 Accueil</Link>
-          <Link to="/counter" className="nav-item">🔢 Compteur</Link>
-          <Link to="/users" className="nav-item">👥 Utilisateurs</Link>
           <Link to="/about" className="nav-item">ℹ️ À propos</Link>
           
           {currentUser ? (
