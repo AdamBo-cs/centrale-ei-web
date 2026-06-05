@@ -14,8 +14,10 @@ import {
   filterMoviesByRating,
 } from '../../utils/filterMovies';
 import { countGenres } from '../../utils/countGenres';
+import { useAuth } from '../../context/AuthContext';
 
 function Home() {
+  const { currentUser } = useAuth();
   const [selectedGenres, setSelectedGenres] = useState([]);
   const [sortBy, setSortBy] = useState('rating');
   const [movieName, setMovieName] = useState('');
@@ -30,7 +32,7 @@ function Home() {
   const [selectedLanguages, setSelectedLanguages] = useState([]);
 
   const movies = UseFetchMovies();
-
+  console.log("Films récupérés :", movies);
   const genres = extractGenres(movies);
 
   const genreCounts = countGenres(movies);
@@ -69,70 +71,116 @@ function Home() {
     selectedLanguages.length;
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Top 100 films</h1>
+    <div className="home-scrapbook-container">
+      {/* Le nouvel en-tête style Scrapbook */}
+      <header className="home-header-scrapbook">
+        <h1 className="home-title-handwritten">Mes recommandations</h1>
+        <p className="home-subtitle">Des films qui m'ont marqué, à partager avec ceux qui aiment le cinéma autant que moi.</p>
       </header>
 
-      <div className="input-container">
+      {/* Barre de recherche et contrôles (On gardera tes composants de filtres existants) */}
+      <div className="controls-container-scrapbook">
         <input
           type="text"
-          placeholder="Entrez le nom d'un film..."
+          className="scrapbook-search"
+          placeholder="Rechercher un film..."
           value={movieName}
           onChange={(e) => setMovieName(e.target.value)}
         />
+        
+        <div className="scrapbook-filters">
+          <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+            <option value="name">Ordre alphabétique</option>
+            <option value="date-desc">Date (plus récent)</option>
+            <option value="date-asc">Date (plus ancien)</option>
+            <option value="rating-desc">Le plus populaire</option>
+            <option value="rating-asc">Le moins populaire</option>
+          </select>
+
+          {/* Ton composant de filtres complexe reste intact */}
+          <FilterPanel
+            durationFilters={durationFilters}
+            setDurationFilters={setDurationFilters}
+            minRating={minRating}
+            setMinRating={setMinRating}
+            genres={genres}
+            selectedGenres={selectedGenres}
+            setSelectedGenres={setSelectedGenres}
+            genreMode={genreMode}
+            setGenreMode={setGenreMode}
+            languages={languages}
+            selectedLanguages={selectedLanguages}
+            setSelectedLanguages={setSelectedLanguages}
+            activeFiltersCount={activeFiltersCount}
+            genreCounts={genreCounts}
+          />
+        </div>
       </div>
 
-      <div className="controls-container">
-        <select
-          className="select-style"
-          value={sortBy}
-          onChange={(e) => setSortBy(e.target.value)}
-        >
-          <option value="name">Ordre alphabétique</option>
+      {/* La nouvelle grille de Polaroïds */}
+      {/* La nouvelle grille de Polaroïds stylisés */}
+      <div className="polaroid-grid">
+        {movies.length === 0 ? (
+          <p className="profile-loading">Recherche des films dans la base de données...</p>
+        ) : (
+          sortedMovies.slice(0, visibleMovies).map((singleMovie, index) => {
+            // Helper pour TMDB (comme pour le profil)
+            const getPosterUrl = (path) => {
+              if (!path) return null;
+              return path.startsWith('/') ? `https://image.tmdb.org/t/p/w500${path}` : path;
+            };
 
-          <option value="date-desc">Date (plus récent)</option>
+            // Conversion de la note de popularité (0-10) en étoiles (0-5)
+            // On convertit pour l'affichage visuel, même si TypeORM a un float
+            const starsCount = Math.round((singleMovie.rating || 0) / 2);
+            const stars = Array(5).fill('☆').map((s, i) => i < starsCount ? '★' : '☆');
 
-          <option value="date-asc">Date (plus ancien)</option>
-
-          <option value="rating-desc">Le plus populaire</option>
-
-          <option value="rating-asc">Le moins populaire</option>
-        </select>
-
-        <FilterPanel
-          durationFilters={durationFilters}
-          setDurationFilters={setDurationFilters}
-          minRating={minRating}
-          setMinRating={setMinRating}
-          genres={genres}
-          selectedGenres={selectedGenres}
-          setSelectedGenres={setSelectedGenres}
-          genreMode={genreMode}
-          setGenreMode={setGenreMode}
-          languages={languages}
-          selectedLanguages={selectedLanguages}
-          setSelectedLanguages={setSelectedLanguages}
-          activeFiltersCount={activeFiltersCount}
-          genreCounts={genreCounts}
-        />
-      </div>
-
-      <p>{movieName}</p>
-      <div className="movies-grid">
-        {sortedMovies.slice(0, visibleMovies).map((singleMovie, index) => (
-          <Link
-            to={`/movies/${singleMovie.id}`}
-            key={singleMovie.id}
-            className="movie-grid-item"
-          >
-            <Movie movie={singleMovie} rank={index + 1} />
-          </Link>
-        ))}
+            return (
+              <Link to={`/movies/${singleMovie.id}`} key={singleMovie.id} className="polaroid-card">
+                
+                {/* Numéro de rang style tamponné (optionnel) */}
+                <div className="polaroid-rank">#{index + 1}</div>
+                
+                <div className="polaroid-image-wrapper">
+                  {singleMovie.image ? (
+                    <img src={getPosterUrl(singleMovie.image)} alt={singleMovie.name} />
+                  ) : (
+                    <div className="poster-placeholder">🎞️</div>
+                  )}
+                  
+                  {/* ÉTQUETTE UTILISATEUR (comme dans l'image d'inspi) */}
+                  <div className="polaroid-user-tag">
+                    <div className="user-avatar-mini">
+                      {currentUser ? currentUser.firstname[0].toUpperCase() : '?'}
+                    </div>
+                    <span className="user-name">
+                      by {currentUser ? currentUser.firstname : 'Cinéphile'}
+                    </span>
+                  </div>
+                </div>
+                
+                {/* LÉGENDE DANS LA MARGE DU BAS */}
+                <div className="polaroid-caption">
+                  {/* Titre manuscrit (Caveat) */}
+                  <h3 className="polaroid-title">{singleMovie.name}</h3>
+                  
+                  {/* Étoiles dorées */}
+                  <div className="polaroid-stars">
+                    {stars.map((star, i) => (
+                      <span key={i} className={star === '★' ? 'star-filled' : 'star-empty'}>
+                        {star}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </Link>
+            );
+          })
+        )}
       </div>
 
       {visibleMovies < sortedMovies.length && (
-        <button onClick={() => setVisibleMovies(visibleMovies + 20)}>
+        <button className="scrapbook-load-more" onClick={() => setVisibleMovies(visibleMovies + 20)}>
           Charger plus
         </button>
       )}
