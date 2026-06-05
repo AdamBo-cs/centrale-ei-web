@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import './moviedetails.css'; // <-- Importation de votre nouvelle feuille de style
 import RecoGrid from '../RecoGrid/RecoGrid'; // <-- AJOUT de l'import
+import ReviewSection from '../../components/ReviewSection/ReviewSection';
 import StarRating from './StarRating'; // Ajuste le chemin si tu l'as mis dans un autre dossier
 import { useAuth } from '../../context/AuthContext'; // Vérifie que le chemin est correct selon l'emplacement de ton fichier
 
@@ -209,6 +210,7 @@ const MovieDetails = () => {
         </article>
       </section>
       <RecoGrid currentMovieId={id} />
+      <ReviewSection movieId={movieDetails.id} />
     </main>
   );
 };

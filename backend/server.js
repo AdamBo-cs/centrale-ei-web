@@ -5,9 +5,11 @@ import { appDataSource } from './datasource.js';
 import indexRouter from './routes/index.js';
 import usersRouter from './routes/users.js';
 import moviesRouter from './routes/movies.js';
+import reviewRouter from './routes/review.js'; // <-- AJOUTE CETTE LIGNE ICI
 import { jsonErrorHandler } from './services/jsonErrorHandler.js';
 import { routeNotFoundJsonHandler } from './services/routeNotFoundJsonHandler.js';
 import recommendationRouter from './routes/reco_router.js';
+import reviewRoutes from './routes/review.js'; // Ajuste le chemin si besoin
 
 const startServer = async () => {
   console.log('Data Source has been initialized!');
@@ -24,6 +26,7 @@ const startServer = async () => {
 
   app.use('/users', usersRouter);
   app.use('/movies', moviesRouter);
+  app.use('/reviews', reviewRoutes);
 
   // Register 404 middleware and error handler
   app.use(routeNotFoundJsonHandler); // this middleware must be registered after all routes to handle 404 correctly
