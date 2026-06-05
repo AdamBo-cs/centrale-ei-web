@@ -1,11 +1,12 @@
 import "./About.css";
+import ScrollToTopButton from '../../components/ScrollToTopButton/ScrollToTopButton';
 
 export default function About() {
   return (
     <>
     <div className="App">
-      <header className="App-header">
-        <h1>A propos du Cinéphile</h1>
+      <header className="home-header-scrapbook">
+        <h1 className="home-title-handwritten">Les films du moment</h1>
       </header>
     </div>
 

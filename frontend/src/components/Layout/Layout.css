@@ -77,7 +77,7 @@
 .scrapbook-main-content {
   padding: 30px 40px;
   /* On permet au contenu central de défiler s'il est très long */
-  height: 100vh;
+  height: 86vh;
   overflow-y: auto; 
 }
 

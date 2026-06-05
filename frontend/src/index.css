@@ -4,12 +4,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Rubik+Dirt&display=swap');
 
-h1 {
-  font-family: 'Special Elite', serif;
-}
-
 h3 {
   font-family: 'Caveat', serif;
+}
+
+p {
+  font-size: 0.9rem;
 }
 
 body {

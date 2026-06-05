@@ -12,23 +12,25 @@
 }
 
 .about-page {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 40px;
+  padding: 20px;
 
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+
   flex-wrap: wrap;
   justify-content: center;
-  gap: 40px;
+  gap: 10px;
   background: var(--paper);
   min-height: 100vh;
 }
 
 .postit.blue {
-  width: 320px;
+  width: 300px;
   min-height: 260px;
 
-  padding: 24px;
+  padding: 15px;
 
   background: var(--postit-blue);
 
@@ -38,19 +40,14 @@
     0 8px 18px rgba(0,0,0,0.15);
 
   position: relative;
-
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-
   font-family: "Special Elite", sans-serif;
 }
 
 .postit.pink {
-  width: 320px;
+  width: 300px;
   min-height: 260px;
 
-  padding: 24px;
+  padding: 15px;
 
   background: var(--postit-pink);
 
@@ -61,18 +58,14 @@
 
   position: relative;
 
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-  
   font-family: "Special Elite", sans-serif;
 }
 
 .postit.green {
-  width: 320px;
+  width: 300px;
   min-height: 260px;
 
-  padding: 24px;
+  padding: 15px;
 
   background: var(--postit-green);
 
@@ -82,19 +75,15 @@
     0 8px 18px rgba(0,0,0,0.15);
 
   position: relative;
-
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
     
   font-family: "Special Elite", sans-serif;
 }
 
 .postit.yellow {
-  width: 320px;
+  width: 300px;
   min-height: 260px;
 
-  padding: 24px;
+  padding: 15px;
 
   background: var(--postit-yellow);
 
@@ -104,10 +93,6 @@
     0 8px 18px rgba(0,0,0,0.15);
 
   position: relative;
-
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
   
   font-family: "Special Elite", sans-serif;
 }

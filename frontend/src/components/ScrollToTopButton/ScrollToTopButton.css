@@ -29,6 +29,7 @@
     opacity 0.2s ease;  
 }
 
+
 .scroll-top-button.visible {
     opacity: 0.15;
     pointer-events: auto;

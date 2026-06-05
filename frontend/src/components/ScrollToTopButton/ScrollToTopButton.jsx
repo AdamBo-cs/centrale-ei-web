@@ -6,7 +6,7 @@ const ScrollToTopButton = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setVisible(window.scrollY >= 250);
+      setVisible(window.scrollY >= 0);
     };
 
     window.addEventListener("scroll", handleScroll);

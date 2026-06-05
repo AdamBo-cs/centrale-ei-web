@@ -11,8 +11,8 @@ const Layout = ({ children }) => {
       {/* COLONNE GAUCHE : Navigation */}
       <aside className="scrapbook-sidebar-left">
         <div className="sidebar-logo">
-          <h2>🎬 Ciné Carnet</h2>
-          <p>Le carnet d'un cinéphile</p>
+          <h2>🎬 Le cinéphile</h2>
+          <p>Passionnés de cinéma</p>
         </div>
 
         <nav className="sidebar-nav">
