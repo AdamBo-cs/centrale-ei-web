@@ -79,6 +79,10 @@ const Movie = new typeorm.EntitySchema({
       type: 'varchar',
       nullable: true,
     },
+    vecteur_contenu: {
+      type: 'text',
+      nullable: true,
+    },
   },
 });
 
