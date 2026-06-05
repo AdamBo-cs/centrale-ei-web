@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import './profile.css';
+import './profile.css';
+import ProfileDuoRecommendations from './ProfileDuoReco';
 
 const Profile = () => {
   const { currentUser, logout } = useAuth();
@@ -98,7 +100,7 @@ const Profile = () => {
       {/* SECTION DES RECOMMANDATIONS PERSONNALISÉES (Nouveau) */}
       <section className="profile-recommendations-section">
         <div className="profile-section-title-container">
-          <h2>Recommandé pour vous ✨</h2>
+          <h2>Recommandé pour vous</h2>
           <p className="profile-subtitle">
             Basé sur vos goûts cinématographiques
           </p>
@@ -226,6 +228,11 @@ const Profile = () => {
           </div>
         )}
       </section>
+      <hr className="profile-separator" />
+      <ProfileDuoRecommendations
+        currentUserId={currentUser.id}
+        getPosterUrl={getPosterUrl}
+      />
     </main>
   );
 };
