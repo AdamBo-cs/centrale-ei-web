@@ -7,7 +7,7 @@ import usersRouter from './routes/users.js';
 import moviesRouter from './routes/movies.js';
 import { jsonErrorHandler } from './services/jsonErrorHandler.js';
 import { routeNotFoundJsonHandler } from './services/routeNotFoundJsonHandler.js';
-import recommendationRouter from './routes/reco_router.js'; 
+import recommendationRouter from './routes/reco_router.js';
 
 const startServer = async () => {
   console.log('Data Source has been initialized!');
@@ -42,7 +42,22 @@ const startServer = async () => {
 // 2. starts the database connection first then starts the server
 appDataSource
   .initialize()
-  .then(startServer)
+  .then(() => {
+    // AJOUT TEMPORAIRE : On force l'ajout de la colonne si elle n'existe pas
+    return appDataSource
+      .query('ALTER TABLE user ADD COLUMN vecteur_profil TEXT NULL;')
+      .then(() => {
+        console.log('[SQL] Colonne vecteur_profil ajoutée avec succès !');
+      })
+      .catch((err) => {
+        // Si la colonne existe déjà, SQLite va râler. On l'ignore proprement, c'est normal !
+        console.log(
+          "[SQL] La colonne existe déjà ou n'a pas pu être ajoutée :",
+          err.message
+        );
+      });
+  })
+  .then(startServer) // Une fois la colonne gérée, on démarre le serveur
   .catch((err) => {
     console.error('Error during Data Source initialization:', err);
   });

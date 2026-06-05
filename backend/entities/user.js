@@ -12,19 +12,24 @@ const User = new typeorm.EntitySchema({
       type: String,
       unique: true,
     },
-    password: { 
-      type: String, 
-      nullable: true
+    password: {
+      type: String,
+      nullable: true,
     },
     firstname: { type: String },
     lastname: { type: String },
-    theme: { 
-      type: String, 
-      default: 'light' // Préférence visuelle par défaut
+    theme: {
+      type: String,
+      default: 'light', // Préférence visuelle par défaut
     },
     isPublic: {
       type: Boolean,
-      default: true}
+      default: true,
+    },
+    vecteur_profil: {
+      type: 'text',
+      nullable: true, // Sera "null" tant que l'utilisateur n'a noté aucun film
+    },
   },
 });
 

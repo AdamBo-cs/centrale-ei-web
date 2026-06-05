@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import './Header.css';
+import { useState, useEffect } from 'react';
 
 const Header = () => {
   const { currentUser, logout } = useAuth();
@@ -11,9 +12,40 @@ const Header = () => {
     navigate('/');
   };
 
+  const [visible, setVisible] = useState(true);
+  useEffect(() => {
+    const handleScroll = () => {
+
+      if (window.scrollY < 50) {
+        setVisible(true);
+        return;
+      }
+
+      if (window.scrollY > 150) {
+        setVisible(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   return (
-    <nav className="header-container">
-      {/* Zone Logo / Marque ou Home */}
+    <>
+      <div
+          className="header-trigger"
+          onMouseEnter={() => setVisible(true)}
+      />
+      <nav
+        className={`header-container ${visible ? 'visible' : ''}`}
+        onMouseLeave={() => {
+          if (window.scrollY > 150) {
+            setVisible(false);}
+        }}
+      >
       <div className="header-logo">
         <Link className="link logo-text" to="/">CinéReco</Link>
       </div>
@@ -44,6 +76,7 @@ const Header = () => {
         )}
       </div>
     </nav>
+    </>
   );
 };
 
