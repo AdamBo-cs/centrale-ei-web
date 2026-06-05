@@ -1,11 +1,12 @@
 /* =========================================
-   REGISTER - STYLE CARNET / SCRAPBOOK
+   LOGIN - STYLE CARNET / SCRAPBOOK
    ========================================= */
 
-.register-container {
+.login-container {
   max-width: 400px;
   margin: 80px auto;
   padding: 40px;
+  /* Fond blanc demandé */
   background-color: #ffffff; 
   border: 1px solid #ddd;
   box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
@@ -13,8 +14,8 @@
   position: relative;
 }
 
-/* L'effet de papier décalé */
-.register-container::after {
+/* L'effet de papier décalé en dessous reste en arrière-plan */
+.login-container::after {
   content: "";
   position: absolute;
   top: -10px;
@@ -23,10 +24,10 @@
   height: 100%;
   border: 1px solid #ddd;
   z-index: -1;
-  background: #fdfdfd;
+  background: #fdfdfd; /* Couleur papier très clair */
 }
 
-.register-title {
+.login-container h2 {
   text-align: center;
   color: var(--scrapbook-ink-black);
   margin-bottom: 30px;
@@ -35,32 +36,29 @@
   padding-bottom: 10px;
 }
 
-.register-form {
+.login-form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 20px;
 }
 
-.register-form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.register-label {
+.login-form label {
+  display: block;
+  margin-bottom: 5px;
   color: var(--scrapbook-ink-black);
 }
 
-.register-input {
+.login-form input {
   width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
-  background: #ffffff;
+  /* Fond blanc pour les inputs aussi */
+  background: #ffffff; 
   font-family: inherit;
   box-sizing: border-box;
 }
 
-.register-button {
+.login-button {
   padding: 12px;
   background-color: var(--scrapbook-stamp-red);
   color: white;
@@ -68,15 +66,15 @@
   cursor: pointer;
   font-family: 'Special Elite', monospace;
   font-size: 1rem;
-  margin-top: 15px;
+  margin-top: 10px;
   transition: transform 0.1s;
 }
 
-.register-button:hover {
+.login-button:hover {
   transform: scale(1.02);
 }
 
-.register-footer {
+.login-footer {
   margin-top: 25px;
   text-align: center;
   font-family: 'Caveat', cursive;
@@ -89,7 +87,7 @@
   cursor: pointer;
 }
 
-.register-error {
+.error-message {
   color: var(--scrapbook-stamp-red);
   text-align: center;
   margin-bottom: 15px;

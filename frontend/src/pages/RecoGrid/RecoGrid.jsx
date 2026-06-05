@@ -33,12 +33,12 @@ const RecommendationGrid = ({ currentMovieId }) => {
     }
 
     return () => abortController.abort();
-  }, [currentMovieId]); // Si l'id du film change, on recalcule
+  }, [currentMovieId]);
 
   if (loading) {
     return (
-      <div className="reco-loading">
-        Calcul des affinités cinématographiques...
+      <div className="reco-loading font-handwritten">
+        Recherche de films similaires dans les archives...
       </div>
     );
   }
@@ -50,7 +50,6 @@ const RecommendationGrid = ({ currentMovieId }) => {
     if (!path) {
       return null;
     }
-
     return path.startsWith('/')
       ? `https://image.tmdb.org/t/p/w500${path}`
       : path;
@@ -58,22 +57,27 @@ const RecommendationGrid = ({ currentMovieId }) => {
 
   return (
     <section className="reco-section">
-      <h3 className="reco-title">Films similaires recommandés</h3>
+      <h3 className="reco-title font-handwritten">Ces films pourraient aussi te plaire...</h3>
+      
       <div className="reco-grid">
         {recommendations.map((movie) => (
-          // Link force React Router à changer d'ID et rafraîchir la page du film choisi !
           <Link to={`/movies/${movie.id}`} key={movie.id} className="reco-card">
-            {movie.image ? (
-              <img
-                src={getPosterUrl(movie.image)}
-                alt={movie.name}
-                className="reco-thumb"
-              />
-            ) : (
-              <div className="reco-thumb-placeholder">Pas d'image</div>
-            )}
-            <h4 className="reco-name">{movie.name}</h4>
-            <span className="reco-genre-badge">
+            {/* La photo type Polaroïd */}
+            <div className="reco-photo-frame">
+              {movie.image ? (
+                <img
+                  src={getPosterUrl(movie.image)}
+                  alt={movie.name}
+                  className="reco-thumb"
+                />
+              ) : (
+                <div className="reco-thumb-placeholder font-typewriter">Pas d'image</div>
+              )}
+            </div>
+            
+            {/* Les textes en dessous */}
+            <h4 className="reco-name font-typewriter">{movie.name}</h4>
+            <span className="reco-genre-badge font-handwritten">
               {movie.genres?.split(',')[0]}
             </span>
           </Link>

@@ -105,6 +105,8 @@ const ReviewSection = ({ movieId }) => {
     <div className="review-section-container">
       <h3 className="font-handwritten review-title">Notes & Avis des Cinéphiles</h3>
 
+      {/* ... après le titre ... */}
+
       {currentUser ? (
         <form onSubmit={handleSubmit} className="review-form">
           <textarea
@@ -115,18 +117,20 @@ const ReviewSection = ({ movieId }) => {
             rows="3"
             required
           />
-          {/* On grise et désactive le bouton si isSubmitting est vrai */}
           <button 
             type="submit" 
             className="review-submit-btn font-typewriter"
             disabled={isSubmitting}
-            style={{ opacity: isSubmitting ? 0.5 : 1, cursor: isSubmitting ? 'wait' : 'pointer' }}
           >
             {isSubmitting ? "Épinglage..." : "Épingler mon avis"}
           </button>
         </form>
       ) : (
-        <p className="review-login-prompt font-typewriter">Connecte-toi pour laisser ton avis sur ce film.</p>
+        /* ICI : On rend le message plus visible, peut-être même avec un lien vers la page d'inscription */
+        <div className="review-login-prompt font-typewriter">
+          <p>Connecte-toi pour laisser ton avis sur ce film.</p>
+          <a href="/login" className="login-link">Se connecter / S'inscrire</a>
+        </div>
       )}
 
       <div className="reviews-list">
