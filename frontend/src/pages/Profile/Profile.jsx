@@ -104,11 +104,11 @@ const Profile = () => {
           /* VUE 2 : TOUS LES FILMS (Vue compacte : Poster, titre, note uniquement) */
           <div className="profile-section-wrapper">
             <div className="profile-section-title-container">
-              <h2>Tous mes films notés ({ratedMovies.length})</h2>
-              <button className="profile-toggle-btn secondary" onClick={() => setShowAll(false)}>
-                Retour à la vue réduite
-              </button>
-            </div>
+                <h2>Films notés récemment</h2>
+                 <button className="profile-toggle-btn" onClick={() => setShowAll(true)}>
+                 Voir tout ({ratedMovies.length})
+                </button>
+                </div>
 
             <div className="profile-movies-grid compact">
               {ratedMovies.map((movie) => (
