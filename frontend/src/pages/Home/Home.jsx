@@ -74,8 +74,7 @@ function Home() {
     <div className="home-scrapbook-container">
       {/* Le nouvel en-tête style Scrapbook */}
       <header className="home-header-scrapbook">
-        <h1 className="home-title-handwritten">Mes recommandations</h1>
-        <p className="home-subtitle">Des films qui m'ont marqué, à partager avec ceux qui aiment le cinéma autant que moi.</p>
+        <h1 className="home-title-handwritten">Les films du moment</h1>
       </header>
 
       {/* Barre de recherche et contrôles (On gardera tes composants de filtres existants) */}
@@ -89,7 +88,11 @@ function Home() {
         />
         
         <div className="scrapbook-filters">
-          <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+          <select 
+            className="select-style"
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+          >
             <option value="name">Ordre alphabétique</option>
             <option value="date-desc">Date (plus récent)</option>
             <option value="date-asc">Date (plus ancien)</option>
@@ -116,8 +119,7 @@ function Home() {
           />
         </div>
       </div>
-
-      {/* La nouvelle grille de Polaroïds */}
+      
       {/* La nouvelle grille de Polaroïds stylisés */}
       <div className="polaroid-grid">
         {movies.length === 0 ? (

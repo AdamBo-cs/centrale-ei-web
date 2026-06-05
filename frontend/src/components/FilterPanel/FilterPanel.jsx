@@ -41,7 +41,7 @@ function FilterPanel({
 
           <div className="reset-container">  
             <button
-              className="reset-filters-btn"
+              className="btn"
               onClick={() => {
                 setMinRating(0);
 

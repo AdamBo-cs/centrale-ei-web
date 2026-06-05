@@ -31,39 +31,12 @@ const Layout = ({ children }) => {
             <Link to="/login" className="nav-item">🔑 Se connecter</Link>
           )}
         </nav>
-
-        {/* Petit espace "Post-it" en bas à gauche */}
-        <div className="sidebar-postit">
-          <h4>Aujourd'hui</h4>
-          <ul>
-            <li>Revoir Inception</li>
-            <li>Préparer la soirée ciné</li>
-          </ul>
-        </div>
       </aside>
 
       {/* COLONNE CENTRALE : Le contenu de tes pages (Accueil, Profil...) */}
       <main className="scrapbook-main-content">
         {children}
       </main>
-
-      {/* COLONNE DROITE : Widgets, citations, etc. */}
-      <aside className="scrapbook-sidebar-right">
-        {/* Le Header de droite (Recherche + Profil) de ta maquette pourrait aller en haut ici, ou dans le main */}
-        <div className="widget-quote">
-          <p>"Le cinéma, c'est l'écriture avec de la lumière."</p>
-          <span>- Jean Cocteau</span>
-        </div>
-
-        <div className="widget-must-see">
-          <h3>⭐ À voir absolument</h3>
-          <ul>
-            <li>2001, l'Odyssée de l'espace</li>
-            <li>Le Parrain</li>
-            <li>Forrest Gump</li>
-          </ul>
-        </div>
-      </aside>
     </div>
   );
 };
