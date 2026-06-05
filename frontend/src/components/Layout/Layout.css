@@ -12,10 +12,14 @@
 
 /* --- COLONNE GAUCHE --- */
 .scrapbook-sidebar-left {
+  position: sticky;
+  top: 0;
+  
   padding: 30px 20px;
   border-right: 1px dashed #ccc; /* Un bord pointillé pour l'effet papier */
   display: flex;
   flex-direction: column;
+  align-self: start;
 }
 
 .sidebar-logo h2 {
@@ -76,15 +80,7 @@
 /* --- COLONNE CENTRALE --- */
 .scrapbook-main-content {
   padding: 30px 40px;
-  /* On permet au contenu central de défiler s'il est très long */
-  height: 86vh;
   overflow-y: auto; 
-}
-
-/* --- COLONNE DROITE --- */
-.scrapbook-sidebar-right {
-  padding: 30px 20px;
-  border-left: 1px dashed #ccc;
 }
 
 .widget-quote {

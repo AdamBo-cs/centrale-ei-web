@@ -4,6 +4,7 @@ import ScrollToTopButton from '../../components/ScrollToTopButton/ScrollToTopBut
 export default function About() {
   return (
     <>
+    <ScrollToTopButton/>
     <div className="App">
       <header className="home-header-scrapbook">
         <h1 className="home-title-handwritten">Les films du moment</h1>
